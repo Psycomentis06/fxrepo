@@ -1,0 +1,56 @@
+version: "3"
+services:
+  fx-storage:
+    build:
+      dockerfile: "dockerfile"
+      context: "storage"
+    environment:
+      # S3 config
+      - S3_ACCESS_KEY=aa
+      - S3_SECRET_KEY=aa
+      - S3_ENDPOINT=fx-minio-container:9001
+      - S3_SSL=false
+      # Username and password used to authenticate every request
+      - USERNAME=user
+      - PASSWORD=user
+    ports:
+      - "9055:8080"
+    networks:
+      - kafka-network
+      - minio-network
+  fx-minio:
+    image: minio/minio
+    container_name: fx-minio-container
+    command: server --console-address ":9001" /data
+    ports:
+      -  "9000:9000"
+      -  "9001:9001"
+    volumes:
+      - minio-data-volume:/data
+    networks:
+      - minio-network
+  fx-zookeeper:
+    image: ubuntu/zookeeper
+    container_name: fx-zk-container
+    networks:
+      - zookeeper-network
+    ports:
+      - ":2181"
+  fx-apache_kafka:
+    image: ubuntu/kafka
+    networks:
+      - zookeeper-network
+      - kafka-network
+    environment:
+      - ZOOKEEPER_HOST=fx-zk-container
+      - ZOOKEEPER_PORT=2181
+    ports:
+      - ":9092"
+    depends_on:
+      - fx-zookeeper
+volumes:
+  minio-data-volume:
+networks:
+  zookeeper-network:
+  kafka-network:
+  minio-network:
