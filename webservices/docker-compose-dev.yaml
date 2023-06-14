@@ -1,4 +1,4 @@
-version: "3"
+version: "3.8"
 services:
   fx-storage:
     build:
@@ -6,18 +6,23 @@ services:
       context: "storage"
     environment:
       # S3 config
-      - S3_ACCESS_KEY=aa
-      - S3_SECRET_KEY=aa
-      - S3_ENDPOINT=fx-minio-container:9001
+      # local dev keys
+      - S3_ACCESS_KEY=5MfxOFuj0zKwlLnd5sJ8
+      - S3_SECRET_KEY=BUMmJxjMn2mFMw8YkZkK9lS2Zj73Vqd3vD3UQAkT
+      - S3_ENDPOINT=fx-minio-container:9000
       - S3_SSL=false
       # Username and password used to authenticate every request
       - USERNAME=user
       - PASSWORD=user
+      # Gin mode
+      - GIN_MODE=debug
     ports:
       - "9055:8080"
     networks:
       - kafka-network
       - minio-network
+    volumes:
+      - "./storage:/usr/src/app"
   fx-minio:
     image: minio/minio
     container_name: fx-minio-container
@@ -48,9 +53,18 @@ services:
       - ":9092"
     depends_on:
       - fx-zookeeper
+  fx-redis:
+    # For dev we are using only one redis instance
+    image: redis:7-alpine
+    ports:
+      -  "6379:6379"
+    networks:
+      redis-network:
+
 volumes:
   minio-data-volume:
 networks:
   zookeeper-network:
   kafka-network:
   minio-network:
+  redis-network:
