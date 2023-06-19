@@ -5,7 +5,6 @@ from views import image
 
 def create_app() -> Flask:
     container = Container()
-    container.config.redis.endpoint.from_env("REDIS_ENDPOINT")
 
     app = Flask(__name__)
     app.container = container

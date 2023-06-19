@@ -1,2 +1,3 @@
+# Dev config override config.yaml
 redis:
   endpoint: "from dev yaml"
