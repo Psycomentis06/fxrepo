@@ -9,3 +9,15 @@ def index(redis_service: redis.RedisService = Provide[Container.redis_service]):
     if len(s) > 0:
         return s
     return "Hello from index"
+
+
+def upload():
+    return "upload image"
+
+
+def remove():
+    return "Remove img"
+
+
+def get():
+    return "Get img"
