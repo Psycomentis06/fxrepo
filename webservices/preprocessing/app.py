@@ -1,12 +1,18 @@
 from flask import Flask
+from containers import Container
+from views import image
 
-app = Flask(__name__)
 
+def create_app() -> Flask:
+    container = Container()
+    container.config.redis.endpoint.from_env("REDIS_ENDPOINT")
 
-@app.route('/')
-def hello_world():  # put application's code here
-    return 'Hello World!'
+    app = Flask(__name__)
+    app.container = container
+    app.add_url_rule('/', 'index', image.index)
+
+    return app
 
 
 if __name__ == '__main__':
-    app.run()
+    create_app().run(debug=True)
