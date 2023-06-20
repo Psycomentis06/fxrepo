@@ -1,3 +1,11 @@
 # Dev config override config.yaml
 redis:
-  endpoint: "from dev yaml"
+  host: ${REDIS_HOST:localhost}
+  port: ${REDIS_PORT:6379}
+  password: ${REDIS_PASSWORD:}
+  db: ${REDIS_DB:0}
+kafka:
+  bootstrap:
+    servers: ${KAFKA_HOST:localhost}
+  group:
+    id: ${KAFKA_GROUP_ID:test-group}

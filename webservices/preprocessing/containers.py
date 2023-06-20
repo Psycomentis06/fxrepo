@@ -1,6 +1,5 @@
 from dependency_injector import containers, providers
-from services import redis
-import os
+from redis import Redis
 
 
 class Container(containers.DeclarativeContainer):
@@ -9,6 +8,9 @@ class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(modules=["views.image"])
 
     redis_service = providers.Factory(
-        redis.RedisService,
-        redis=config.redis.endpoint
+        Redis,
+        host=config.redis.host,
+        port=config.redis.port,
+        password=config.redis.password,
+        db=config.redis.db,
     )
