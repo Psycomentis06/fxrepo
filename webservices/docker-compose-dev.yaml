@@ -21,6 +21,7 @@ services:
     networks:
       - kafka-network
       - minio-network
+      - preprocessing-storage-network
     volumes:
       - "./storage:/usr/src/app"
   fx-minio:
@@ -60,6 +61,22 @@ services:
       -  "6379:6379"
     networks:
       redis-network:
+  fx-preprocessing:
+    build:
+      context: "./preprocessing"
+      dockerfile: "Dockerfile"
+    environment:
+      - REDIS_HOST=fx-redis
+      - REDIS_PORT=6379
+    volumes:
+      - "./preprocessing:/usr/src/app"
+    ports:
+      - "9056:5000"
+    networks:
+      kafka-network:
+      redis-network:
+      preprocessing-storage-network:
+
 
 volumes:
   minio-data-volume:
@@ -68,3 +85,4 @@ networks:
   kafka-network:
   minio-network:
   redis-network:
+  preprocessing-storage-network:
