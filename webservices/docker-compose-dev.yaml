@@ -76,6 +76,33 @@ services:
       kafka-network:
       redis-network:
       preprocessing-storage-network:
+  fx-main-service:
+    build:
+      context: "./fx-repo-main"
+      dockerfile: "Dockerfile"
+    environment:
+      - MAIN_DB_HOST=fx-postgresql:5432
+      - MAIN_DB_USERNAME=postgres
+      - MAIN_DB_PASSWORD=postgres
+      - MAIN_DB_CONNECTION_STRING=jdbc:postgresql://fx-postgresql:5432/fx_repo_main
+    volumes:
+      - "./fx-repo-main:/usr/src/app"
+    ports:
+      - "9057:8000"
+    networks:
+      - main-service-network
+      - postgresql-network
+      - redis-network
+      - kafka-network
+  fx-postgresql:
+    image: postgres:15-bookworm
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=fx_repo_main
+    ports:
+      - "5432:5432"
+    networks:
+      - postgresql-network
 
 
 volumes:
@@ -86,3 +113,5 @@ networks:
   minio-network:
   redis-network:
   preprocessing-storage-network:
+  postgresql-network:
+  main-service-network:
