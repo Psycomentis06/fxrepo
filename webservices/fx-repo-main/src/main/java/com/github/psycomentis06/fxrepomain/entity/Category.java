@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
+import java.util.Set;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -31,4 +33,6 @@ public class Category {
     @Column(length = 21)
     @RgbaColorString
     private String color;
+    @OneToMany(mappedBy = "category")
+    private Set<Post> posts;
 }

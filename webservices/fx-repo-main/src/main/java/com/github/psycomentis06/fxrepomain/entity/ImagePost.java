@@ -1,6 +1,7 @@
 package com.github.psycomentis06.fxrepomain.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -11,9 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ImagePost extends Post {
     private String thumbnail;
-    private String accentColor;
-    private String colorPalette;
-    private boolean nsfw;
-    private boolean landscape;
-    // variants
+    @ManyToOne(optional = false)
+    private ImageFile image;
 }

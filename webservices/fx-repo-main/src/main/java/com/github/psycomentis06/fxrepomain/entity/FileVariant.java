@@ -1,16 +1,13 @@
 package com.github.psycomentis06.fxrepomain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class ImagePostVariant {
+public class FileVariant {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
@@ -23,4 +20,6 @@ public class ImagePostVariant {
     private String url;
     private String md5;
     private String sha256;
+    @ManyToOne
+    private File file;
 }

@@ -8,17 +8,18 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
-@MappedSuperclass
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Data
 @NoArgsConstructor
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private long id;
+    private String id;
     @Length(max = 255, min = 10, message = "Slug must be between 10 and 255 characters")
     private String slug;
-
     @Length(max = 255, min = 10, message = "Slug must be between 10 and 255 characters")
     private String title;
     @Column(columnDefinition = "TEXT")
@@ -34,8 +35,11 @@ public class Post {
     // This means that the post is not ready yet = file still being processed and not uploaded to the
     // main storage server
     private boolean ready = false;
-    // Tags
-    // category
+    private boolean nsfw;
+    @ManyToMany
+    private Set<Tag> tags;
+    @ManyToOne
+    private Category category;
     // Comments
     // likes
     // views
