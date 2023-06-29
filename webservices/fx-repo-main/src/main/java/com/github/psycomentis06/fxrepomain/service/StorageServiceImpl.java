@@ -1,10 +1,7 @@
 package com.github.psycomentis06.fxrepomain.service;
 
 import com.github.psycomentis06.fxrepomain.properties.StorageProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -16,6 +13,7 @@ import java.util.UUID;
 public class StorageServiceImpl implements StorageService {
 
     private StorageProperties storageProperties;
+
     @Autowired
     StorageServiceImpl(StorageProperties storageProperties) {
         this.storageProperties = storageProperties;
@@ -35,14 +33,15 @@ public class StorageServiceImpl implements StorageService {
     }
 
     @Override
-    public StorageServiceStatus store(MultipartFile file) {
-        String newFileName = UUID.fromString(file.getName()).toString();
+    public String store(MultipartFile file) {
+        String newFileName = UUID.randomUUID().toString();
         try {
             Files.copy(file.getInputStream(), new File(storageProperties.getDir() + "/" + newFileName).toPath());
         } catch (IOException ioException) {
-            return StorageServiceStatus.FILE_NOT_STORED;
+            ioException.printStackTrace();
+            return null;
         }
-        return StorageServiceStatus.FILE_STORED;
+        return newFileName;
     }
 
     public BufferedInputStream getFileBuffer(String filename) throws IOException {
@@ -58,9 +57,9 @@ public class StorageServiceImpl implements StorageService {
         return getFileBuffer(filename).readAllBytes();
     }
 
-    public byte[] load(String filename,  int start, int length) throws IOException {
+    public byte[] load(String filename, int start, int length) throws IOException {
         byte[] b = new byte[length];
-        getFileBuffer(filename).readNBytes(b,  start, length);
+        getFileBuffer(filename).readNBytes(b, start, length);
         return b;
     }
 

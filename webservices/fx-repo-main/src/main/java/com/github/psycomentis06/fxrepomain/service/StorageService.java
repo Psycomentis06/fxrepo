@@ -19,9 +19,9 @@ public interface StorageService {
     /**
      * Store file to the filesystem
      * @param file multipart sent file
-     * @return byte flag indicating the state of the operation
+     * @return File's UUID string if file saved otherwise null
      */
-    StorageServiceStatus store(MultipartFile file);
+    String store(MultipartFile file);
 
     /**
      * Get the file
