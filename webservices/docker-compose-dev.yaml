@@ -94,6 +94,7 @@ services:
       - postgresql-network
       - redis-network
       - kafka-network
+      - keycloak-network
   fx-postgresql:
     image: postgres:15-bookworm
     environment:
@@ -103,6 +104,27 @@ services:
       - "5432:5432"
     networks:
       - postgresql-network
+      - keycloak-network
+#  fx-keycloak:
+#    build:
+#      context: "keycloak"
+#      dockerfile: "Dockerfile"
+#    environment:
+#      - KC_DB=postgres
+#      - KC_DB_URL=fx-postgresql:5432
+#      - KC_DB_USERNAME=postgres
+#      - KC_DB_PASSWORD=postgres
+#      - KC_HOSTNAME=localhost
+#      - KC_HEALTH_ENABLED=true
+#      - KC_METRICS_ENABLED=true
+#      - KEYCLOAK_ADMIN=admin
+#      - KEYCLOAK_ADMIN_PASSWORD=admin
+#    ports:
+#      - "8443:8443"
+#    networks:
+#      keycloak-network:
+
+
 
 
 volumes:
@@ -115,3 +137,4 @@ networks:
   preprocessing-storage-network:
   postgresql-network:
   main-service-network:
+  keycloak-network:
