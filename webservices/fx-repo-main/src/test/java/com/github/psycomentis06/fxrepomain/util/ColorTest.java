@@ -1,4 +1,4 @@
-package com.github.psycomentis06.fxrepomain;
+package com.github.psycomentis06.fxrepomain.util;
 
 import com.github.psycomentis06.fxrepomain.util.Color;
 import org.junit.jupiter.api.Test;
