@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "fx_file_variant")
 @Data
 @NoArgsConstructor
 public class FileVariant {
@@ -20,6 +21,4 @@ public class FileVariant {
     private String url;
     private String md5;
     private String sha256;
-    @ManyToOne
-    private File file;
 }

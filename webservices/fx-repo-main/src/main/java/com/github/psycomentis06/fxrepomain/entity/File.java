@@ -1,17 +1,21 @@
 package com.github.psycomentis06.fxrepomain.entity;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.Set;
 
 @Entity
+@Table(name = "fx_file")
 @Inheritance(strategy = InheritanceType.JOINED)
+@Data
+@NoArgsConstructor
 public class File {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
 
-    @OneToMany(mappedBy = "file")
+    @OneToMany(cascade = CascadeType.ALL)
     private Set<FileVariant> variants;
 
 }

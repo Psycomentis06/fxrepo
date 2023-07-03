@@ -10,6 +10,7 @@ import org.hibernate.validator.constraints.URL;
 import java.util.Set;
 
 @Entity
+@Table(name = "fx_category")
 @Data
 @NoArgsConstructor
 public class Category {

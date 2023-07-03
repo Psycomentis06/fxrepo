@@ -1,11 +1,13 @@
 package com.github.psycomentis06.fxrepomain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Table(name = "fx_tag")
+@Data
+@NoArgsConstructor
 public class Tag {
     @Id
     private String name;
