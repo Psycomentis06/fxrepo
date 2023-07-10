@@ -46,6 +46,15 @@ export class HeaderService {
     this._header.next(header)
   }
 
+  addOtherLink(link: HeaderLink): void {
+    const header = this._header.getValue();
+    if (header.links.other)
+      header.links.other.push(link)
+    else
+      header.links.other = [link]
+    this._header.next(header)
+  }
+
   get  header(): Observable<Header>{
     return this.$header
   }

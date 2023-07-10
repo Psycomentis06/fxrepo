@@ -5,14 +5,6 @@
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
       </label>
       <ul tabindex="0" class="bg-base-200 menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52">
-          <li *ngFor="let l of links">
-            <a>
-              <div class="indicator p-1">
-                <h2 class="text-md"> Not working {{l.name}}</h2>
-                <span class="indicator-item indicator-top indicator-end badge badge-primary" style="font-size: 9pt;">new</span>
-              </div>
-            </a>
-          </li>
         <li>
           <a>
             <div class="indicator p-1">
@@ -62,7 +54,7 @@
         </li>
       </ul>
     </div>
-    <a class="btn btn-ghost normal-case text-xl">
+    <a routerLink="/" class="btn btn-ghost normal-case text-xl">
       <div class="avatar">
         <div class="w-8 rounded">
           <img src="../../logo.png" />
@@ -72,16 +64,8 @@
   </div>
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal px-1">
-      <li *ngFor="let l of links">
-        <a [routerLink]="l.path">
-          <div class="indicator p-1">
-            <h2 class="text-md">{{l.name}}</h2>
-            <span *ngIf="l.indicator !== undefined" class="indicator-item indicator-top indicator-end badge badge-primary" style="font-size: 9pt;">new</span>
-          </div>
-        </a>
-      </li>
       <li>
-        <a>
+        <a routerLink="images">
           <div class="indicator p-1">
             <h2 class="text-md">Images</h2>
             <span class="indicator-item indicator-top indicator-end badge badge-primary" style="font-size: 9pt;">new</span>

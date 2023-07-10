@@ -9,14 +9,16 @@ import {HeaderLink, HeaderService} from "../service/header.service";
 export class HeaderComponent implements OnInit {
 
   links: HeaderLink[]
+  otherLinks: HeaderLink[]
   constructor(public headerService: HeaderService) {
     this.links = []
+    this.otherLinks = []
   }
 
   ngOnInit() {
     this.headerService.header.subscribe(o => {
       this.links = o.links.links
-      console.log(this.links)
+      this.otherLinks = o.links.other ? o.links.other : []
     })
   }
 }

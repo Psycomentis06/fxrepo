@@ -3,14 +3,15 @@ import {HeaderIndicator, HeaderLink, HeaderService} from "../../service/header.s
 
 @Component({
   selector: 'app-page-component',
-  templateUrl: './page-component.component.html',
-  styleUrls: ['./page-component.component.scss']
+  templateUrl: './page.component.html',
+  styleUrls: ['./page.component.scss']
 })
-export class PageComponentComponent implements OnInit {
+export class PageComponent implements OnInit {
   name: string;
   path: string;
   position: number;
   indicator: HeaderIndicator | null;
+  type: 'link' | 'option'
   ngOnInit(): void {
     this.init()
     const link: HeaderLink = {
@@ -19,7 +20,9 @@ export class PageComponentComponent implements OnInit {
       position: this.position,
       indicator: this.indicator !== null? this.indicator : undefined
     }
-    this.headerService.addLink(link)
+    if (this.type === 'link') this.headerService.addLink(link)
+    else this.headerService.addOtherLink(link)
+
   }
 
   constructor(private headerService: HeaderService) {
@@ -27,6 +30,7 @@ export class PageComponentComponent implements OnInit {
     this.path = ''
     this.position = 0;
     this.indicator = null;
+    this.type = 'option'
   }
 
   init() {}
