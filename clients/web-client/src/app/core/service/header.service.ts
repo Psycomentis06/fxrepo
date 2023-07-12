@@ -12,6 +12,7 @@ export interface HeaderLink {
   name: string;
   path: string;
   position: number;
+  disabled: boolean;
   indicator?: HeaderIndicator
 }
 export interface HeaderIndicator {
@@ -21,7 +22,7 @@ export interface HeaderIndicator {
 
 export interface HeaderLinks {
   links: HeaderLink[];
-  other?: HeaderLink[];
+  more?: HeaderLink[];
 }
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,7 @@ export class HeaderService {
     this._header = new BehaviorSubject<Header>({
       links: {
         links: [],
-        other: []
+        more: []
       }
     })
     this.$header = this._header.asObservable()
@@ -48,10 +49,26 @@ export class HeaderService {
 
   addOtherLink(link: HeaderLink): void {
     const header = this._header.getValue();
-    if (header.links.other)
-      header.links.other.push(link)
+    if (header.links.more)
+      header.links.more.push(link)
     else
-      header.links.other = [link]
+      header.links.more = [link]
+    this._header.next(header)
+  }
+
+  setPost(post: Type<any>): void {
+    const header = this._header.getValue();
+    header.post = post
+    this._header.next(header)
+  }
+
+  setLinks(links: HeaderLinks): void {
+    const header = this._header.getValue();
+    header.links = links
+    this._header.next(header)
+  }
+
+  setHeader(header: Header): void {
     this._header.next(header)
   }
 

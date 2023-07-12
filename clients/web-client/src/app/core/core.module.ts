@@ -5,11 +5,13 @@ import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import {RouterModule} from "@angular/router";
 import { PageComponent } from './component/page-component/page.component';
+import { MobileComponent } from './header/components/mobile/mobile.component';
+import { DesktopComponent } from './header/components/desktop/desktop.component';
 
 
 
 @NgModule({
-  declarations: [LayoutComponent, HeaderComponent, FooterComponent, PageComponent],
+  declarations: [LayoutComponent, HeaderComponent, FooterComponent, PageComponent, MobileComponent, DesktopComponent],
   imports: [
     CommonModule,
     RouterModule

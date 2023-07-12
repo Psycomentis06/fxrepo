@@ -18,7 +18,8 @@ export class PageComponent implements OnInit {
       name: this.name,
       path: this.path,
       position: this.position,
-      indicator: this.indicator !== null? this.indicator : undefined
+      indicator: this.indicator !== null? this.indicator : undefined,
+      disabled: true
     }
     if (this.type === 'link') this.headerService.addLink(link)
     else this.headerService.addOtherLink(link)

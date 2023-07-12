@@ -1,59 +1,8 @@
 <div class="navbar bg-transparent fixed z-50" style="backdrop-filter: blur(20px);">
   <div class="navbar-start">
-    <div class="dropdown">
-      <label tabindex="0" class="btn btn-ghost lg:hidden">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
-      </label>
-      <ul tabindex="0" class="bg-base-200 menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52">
-        <li>
-          <a>
-            <div class="indicator p-1">
-              <h2 class="text-md">Images</h2>
-              <span class="indicator-item indicator-top indicator-end badge badge-primary" style="font-size: 9pt;">new</span>
-            </div>
-          </a>
-        </li>
-        <li class="disabled">
-          <a>
-            <div class="indicator p-1">
-              <h2 class="text-md">Videos</h2>
-              <span class="indicator-item indicator-top indicator-end badge badge-secondary" style="font-size: 9pt;">soon</span>
-            </div>
-          </a>
-        </li>
-        <li class="disabled">
-          <a>
-            <div class="indicator p-1">
-              <h2 class="text-md">Audio</h2>
-              <span class="indicator-item indicator-top indicator-end badge badge-secondary" style="font-size: 9pt;">soon</span>
-            </div>
-          </a>
-        </li>
-        <li tabindex="0">
-          <details>
-            <summary>More</summary>
-            <ul class="shadow">
-              <li class="disabled">
-                <a>
-                  <div class="indicator p-1">
-                    <h2 class="text-md">3D Models</h2>
-                    <span class="indicator-item indicator-top indicator-end badge badge-secondary" style="font-size: 9pt;">soon</span>
-                  </div>
-                </a>
-              </li>
-              <li class="disabled">
-                <a>
-                  <div class="indicator p-1">
-                    <h2 class="text-md">Software Specific</h2>
-                    <span class="indicator-item indicator-top indicator-end badge badge-secondary" style="font-size: 9pt;">soon</span>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </details>
-        </li>
-      </ul>
-    </div>
+    <ng-container *ngIf="!isScreenLarge">
+      <app-mobile />
+    </ng-container>
     <a routerLink="/" class="btn btn-ghost normal-case text-xl">
       <div class="avatar">
         <div class="w-8 rounded">
@@ -62,56 +11,8 @@
       </div>
     </a>
   </div>
-  <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal px-1">
-      <li>
-        <a routerLink="images">
-          <div class="indicator p-1">
-            <h2 class="text-md">Images</h2>
-            <span class="indicator-item indicator-top indicator-end badge badge-primary" style="font-size: 9pt;">new</span>
-          </div>
-        </a>
-      </li>
-      <li class="disabled">
-        <a>
-          <div class="indicator p-1">
-            <h2 class="text-md">Videos</h2>
-            <span class="indicator-item indicator-top indicator-end badge badge-secondary" style="font-size: 9pt;">soon</span>
-          </div>
-        </a>
-      </li>
-      <li class="disabled">
-        <a>
-          <div class="indicator p-1">
-            <h2 class="text-md">Audio</h2>
-            <span class="indicator-item indicator-top indicator-end badge badge-secondary" style="font-size: 9pt;">soon</span>
-          </div>
-        </a>
-      </li>
-      <li tabindex="0">
-        <details>
-          <summary>More</summary>
-          <ul class="shadow bg-base-200 p-2">
-            <li class="disabled">
-              <a>
-                <div class="indicator p-1">
-                  <h2 class="text-md">3D Models</h2>
-                  <span class="indicator-item indicator-top indicator-end badge badge-secondary" style="font-size: 9pt;">soon</span>
-                </div>
-              </a>
-            </li>
-            <li class="disabled">
-              <a>
-                <div class="indicator p-1">
-                  <h2 class="text-md">Software Specific</h2>
-                  <span class="indicator-item indicator-top indicator-end badge badge-secondary" style="font-size: 9pt;">soon</span>
-                </div>
-              </a>
-            </li>
-          </ul>
-        </details>
-      </li>
-    </ul>
+  <div class="navbar-center hidden lg:flex" *ngIf="isScreenLarge">
+   <app-desktop />
   </div>
   <div class="navbar-end">
     <a class="btn">Sign In</a>
