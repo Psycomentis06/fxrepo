@@ -4,6 +4,7 @@ import { ImageComponent } from './image.component';
 import {ImageRoutingModule} from "./image-routing.module";
 import { ImagesComponent } from './images/images.component';
 import { PostComponent } from './post/post.component';
+import { HeaderComponent } from './components/header/header.component';
 
 
 
@@ -11,7 +12,8 @@ import { PostComponent } from './post/post.component';
   declarations: [
     ImageComponent,
     ImagesComponent,
-    PostComponent
+    PostComponent,
+    HeaderComponent
   ],
   imports: [
     CommonModule,

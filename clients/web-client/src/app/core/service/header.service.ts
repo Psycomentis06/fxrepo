@@ -24,6 +24,7 @@ export interface HeaderLinks {
   links: HeaderLink[];
   more?: HeaderLink[];
 }
+
 @Injectable({
   providedIn: 'root'
 })
@@ -31,6 +32,7 @@ export class HeaderService {
 
   private $header: Observable<Header>
   private _header: BehaviorSubject<Header>
+
   constructor() {
     this._header = new BehaviorSubject<Header>({
       links: {
@@ -56,9 +58,15 @@ export class HeaderService {
     this._header.next(header)
   }
 
-  setPost(post: Type<any>): void {
+  setPost(post?: Type<any>): void {
     const header = this._header.getValue();
     header.post = post
+    this._header.next(header)
+  }
+
+  setPre(pre?: Type<any>): void {
+    const header = this._header.getValue();
+    header.pre = pre
     this._header.next(header)
   }
 
@@ -75,4 +83,5 @@ export class HeaderService {
   get  header(): Observable<Header>{
     return this.$header
   }
+
 }

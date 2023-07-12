@@ -10,7 +10,11 @@ const routes: Route[] = [
     children: [
       {
         path: '',
-        component: HomePageComponent
+        component: HomePageComponent,
+        data: {
+          'header-position': 'fixed',
+          title: 'Fx Repo home page'
+        }
       },
       {
         path: 'images',

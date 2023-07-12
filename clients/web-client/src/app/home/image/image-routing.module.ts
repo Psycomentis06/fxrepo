@@ -11,11 +11,17 @@ const routes: Route[] = [
     children: [
       {
         path: '',
-        component: ImagesComponent
+        component: ImagesComponent,
+        data: {
+          title: "Stock images"
+        }
       },
       {
         path: 'post',
-        component: PostComponent
+        component: PostComponent,
+        data: {
+          title: "Post image"
+        }
       }
     ]
   }

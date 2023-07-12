@@ -1,7 +1,17 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ComponentRef,
+  computed, ElementRef,
+  OnDestroy,
+  OnInit,
+  Type,
+  ViewContainerRef
+} from '@angular/core';
 import {Header, HeaderLink, HeaderService} from "../service/header.service";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
-import {Subject, takeUntil} from "rxjs";
+import {filter, Subject, takeUntil} from "rxjs";
+import {ActivatedRoute, ActivationStart, Router, RoutesRecognized} from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -10,10 +20,16 @@ import {Subject, takeUntil} from "rxjs";
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
+  headerPosition: string
   header: Header | undefined
   isScreenLarge: boolean
   _destoryed: Subject<void>
-  constructor(public headerService: HeaderService, breakpointObserver: BreakpointObserver) {
+  constructor(
+    private headerService: HeaderService,
+    private breakpointObserver: BreakpointObserver,
+    private router: Router,
+  ) {
+    this.headerPosition = 'sticky'
     this.isScreenLarge = false
     this._destoryed = new Subject<void>()
     breakpointObserver
@@ -30,10 +46,25 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(o => {
       this.header = o
     })
+
+    this.router.events
+      .pipe(
+        takeUntil(this._destoryed),
+        filter(e => e instanceof ActivationStart)
+      )
+      .subscribe(e => {
+        const event = e as ActivationStart
+        const d = event.snapshot.data
+        if (d && d['header-position'])
+          this.headerPosition = d['header-position']
+        else
+          this.headerPosition = 'sticky'
+    })
   }
 
   ngOnDestroy() {
     this._destoryed.next()
     this._destoryed.complete()
   }
+
 }

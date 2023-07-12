@@ -1,20 +1,28 @@
-<div class="navbar bg-transparent fixed z-50" style="backdrop-filter: blur(20px);">
-  <div class="navbar-start">
-    <ng-container *ngIf="!isScreenLarge">
-      <app-mobile />
-    </ng-container>
-    <a routerLink="/" class="btn btn-ghost normal-case text-xl">
-      <div class="avatar">
-        <div class="w-8 rounded">
-          <img src="../../logo.png" />
+<header [ngClass]="headerPosition" class="top-0 z-50 w-full">
+  <div class="pre-component" >
+    <div *ngComponentOutlet="header?.pre ?? null"></div>
+  </div>
+  <div class="navbar bg-transparent" style="backdrop-filter: blur(20px);">
+    <div class="navbar-start">
+      <ng-container *ngIf="!isScreenLarge">
+        <app-mobile />
+      </ng-container>
+      <a routerLink="/" class="btn btn-ghost normal-case text-xl">
+        <div class="avatar">
+          <div class="w-8 rounded">
+            <img src="../../logo.png" />
+          </div>
         </div>
-      </div>
-    </a>
+      </a>
+    </div>
+    <div class="navbar-center hidden lg:flex" *ngIf="isScreenLarge">
+      <app-desktop />
+    </div>
+    <div class="navbar-end">
+      <a class="btn">Sign In</a>
+    </div>
   </div>
-  <div class="navbar-center hidden lg:flex" *ngIf="isScreenLarge">
-   <app-desktop />
+  <div class="post-component">
   </div>
-  <div class="navbar-end">
-    <a class="btn">Sign In</a>
-  </div>
-</div>
+  <div *ngComponentOutlet="header?.post ?? null"></div>
+</header>
