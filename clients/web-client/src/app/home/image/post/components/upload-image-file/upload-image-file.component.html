@@ -1,0 +1,9 @@
+<div class="upload-img w-full">
+  <label for="upload_image_file_input" class="btn btn-ghost h-auto p-4">
+    <div class="flex flex-col items-center">
+      <ng-icon name="heroPhoto" size="78px" />
+      <p>Upload Image</p>
+    </div>
+  </label>
+  <input #uploadImageInputTemplate (change)="uploadImage(uploadImageInputTemplate)" id="upload_image_file_input" type="file" class="hidden" accept="image/bmp, image/png, image/jpeg">
+</div>

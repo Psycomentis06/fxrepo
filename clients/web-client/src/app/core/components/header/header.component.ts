@@ -11,6 +11,7 @@ import {ActivationStart, Router} from "@angular/router";
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
+  headerHidden: boolean
   headerPosition: string
   headerBgColor: string
   header: Header | undefined
@@ -22,6 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private breakpointObserver: BreakpointObserver,
     private router: Router,
   ) {
+    this.headerHidden = false
     this.headerPosition = 'sticky'
     this.headerBgColor = 'bg-base-300'
     this.isScreenLarge = false
@@ -60,6 +62,12 @@ export class HeaderComponent implements OnInit, OnDestroy {
             this.headerBgColor = d['header-bg']
           } else {
             this.headerBgColor = 'bg-base-300'
+          }
+
+          if (d['header-hidden']) {
+            this.headerHidden = d['header-hidden']
+          } else {
+            this.headerHidden = false
           }
         }
       })

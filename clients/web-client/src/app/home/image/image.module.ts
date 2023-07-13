@@ -5,6 +5,13 @@ import {ImageRoutingModule} from "./image-routing.module";
 import { ImagesComponent } from './images/images.component';
 import { PostComponent } from './post/post.component';
 import { HeaderComponent } from './components/header/header.component';
+import { UploadImageFileComponent } from './post/components/upload-image-file/upload-image-file.component';
+import { CreateImageFormComponent } from './post/components/create-image-form/create-image-form.component';
+import { NgIconsModule } from '@ng-icons/core'
+import {
+  heroPhoto,
+  heroArrowLeft
+} from '@ng-icons/heroicons/outline'
 
 
 
@@ -13,11 +20,17 @@ import { HeaderComponent } from './components/header/header.component';
     ImageComponent,
     ImagesComponent,
     PostComponent,
-    HeaderComponent
+    HeaderComponent,
+    UploadImageFileComponent,
+    CreateImageFormComponent
   ],
   imports: [
     CommonModule,
-    ImageRoutingModule
+    ImageRoutingModule,
+    NgIconsModule.withIcons({
+      heroPhoto,
+      heroArrowLeft
+    })
   ]
 })
 export class ImageModule { }

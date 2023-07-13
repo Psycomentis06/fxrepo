@@ -20,7 +20,8 @@ const routes: Route[] = [
         path: 'post',
         component: PostComponent,
         data: {
-          title: "Post image"
+          title: "Post image",
+          'header-hidden': true
         }
       }
     ]

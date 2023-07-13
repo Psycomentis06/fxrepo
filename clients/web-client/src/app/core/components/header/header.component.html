@@ -1,4 +1,4 @@
-<header [ngClass]="headerPosition" class="top-0 z-50 w-full">
+<header *ngIf="!headerHidden" [ngClass]="headerPosition" class="top-0 z-50 w-full">
   <div class="pre-component">
     <div *ngComponentOutlet="header?.pre ?? null"></div>
   </div>

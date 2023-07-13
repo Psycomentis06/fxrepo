@@ -1,1 +1,18 @@
-<p>post works!</p>
+<div class="post-image-page flex items-center justify-center w-full my-5 min-h-screen relative">
+  <div class="tooltip tooltip-bottom absolute left-2 top-2" data-tip="Go Back">
+    <button class="btn btn-circle" (click)="goBack()">
+      <ng-icon name="heroArrowLeft" size="30px" />
+    </button>
+  </div>
+  <div class="flex items-center bg-base-200 p-5 md:rounded-xl md:shadow-xl w-full md:w-5/6">
+    <div class="flex flex-col w-full md:flex-row">
+      <div class="flex items-center w-1/2">
+        <app-create-image-form class="w-full" />
+      </div>
+      <div class="divider lg:divider-horizontal"></div>
+      <div class="flex items-center justify-center w-1/2">
+        <app-upload-image-file class="w-full text-center" />
+      </div>
+    </div>
+  </div>
+</div>
