@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import {LayoutComponent} from "./layout/layout.component";
 import {HeaderComponent} from './components/header/header.component';
 import {FooterComponent} from './components/footer/footer.component';
@@ -12,7 +12,8 @@ import {DesktopComponent} from './components/header/components/desktop/desktop.c
   declarations: [LayoutComponent, HeaderComponent, FooterComponent, MobileComponent, DesktopComponent],
   imports: [
     CommonModule,
-    RouterModule
+    RouterModule,
+    NgOptimizedImage
   ],
   exports: [
     LayoutComponent

@@ -12,6 +12,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     const h: Header = {
+      logo: 'assets/logo.png',
       links: {
         links: [
           {

@@ -12,6 +12,7 @@ import {ActivationStart, Router} from "@angular/router";
 export class HeaderComponent implements OnInit, OnDestroy {
 
   headerPosition: string
+  headerBgColor: string
   header: Header | undefined
   isScreenLarge: boolean
   _destoryed: Subject<void>
@@ -22,6 +23,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private router: Router,
   ) {
     this.headerPosition = 'sticky'
+    this.headerBgColor = 'bg-base-300'
     this.isScreenLarge = false
     this._destoryed = new Subject<void>()
     breakpointObserver
@@ -47,10 +49,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
       .subscribe(e => {
         const event = e as ActivationStart
         const d = event.snapshot.data
-        if (d && d['header-position'])
-          this.headerPosition = d['header-position']
-        else
-          this.headerPosition = 'sticky'
+        if (d) {
+          if (d['header-position']) {
+            this.headerPosition = d['header-position']
+          } else {
+            this.headerPosition = 'sticky'
+          }
+
+          if (d['header-bg']) {
+            this.headerBgColor = d['header-bg']
+          } else {
+            this.headerBgColor = 'bg-base-300'
+          }
+        }
       })
   }
 

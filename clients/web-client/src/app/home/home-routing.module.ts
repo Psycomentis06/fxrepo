@@ -13,6 +13,7 @@ const routes: Route[] = [
         component: HomePageComponent,
         data: {
           'header-position': 'fixed',
+          'header-bg': 'bg-transparent',
           title: 'Fx Repo home page'
         }
       },
