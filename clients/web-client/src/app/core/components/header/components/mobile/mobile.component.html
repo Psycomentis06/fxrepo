@@ -1,6 +1,8 @@
 <div class="dropdown">
   <label tabindex="0" class="btn btn-ghost lg:hidden">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /></svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16"/>
+    </svg>
   </label>
   <ul tabindex="0" class="bg-base-200 menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow rounded-box w-52">
     <ng-container *ngFor="let l of links.links">
@@ -8,7 +10,8 @@
         <a [routerLink]="l.path">
           <div class="indicator p-1">
             <h2 class="text-md">{{l.name}}</h2>
-            <span *ngIf="l.indicator" class="indicator-item indicator-top indicator-end badge" [ngClass]=" 'badge-' + l.indicator.color" style="font-size: 9pt;">{{l.indicator.content}}</span>
+            <span *ngIf="l.indicator" class="indicator-item indicator-top indicator-end badge"
+                  [ngClass]=" 'badge-' + l.indicator.color" style="font-size: 9pt;">{{l.indicator.content}}</span>
           </div>
         </a>
       </li>
@@ -22,7 +25,8 @@
               <a [routerLink]="l.path">
                 <div class="indicator p-1">
                   <h2 class="text-md">{{l.name}}</h2>
-                  <span *ngIf="l.indicator" class="indicator-item indicator-top indicator-end badge" [ngClass]=" 'badge-' + l.indicator.color" style="font-size: 9pt;">{{l.indicator.content}}</span>
+                  <span *ngIf="l.indicator" class="indicator-item indicator-top indicator-end badge"
+                        [ngClass]=" 'badge-' + l.indicator.color" style="font-size: 9pt;">{{l.indicator.content}}</span>
                 </div>
               </a>
             </li>

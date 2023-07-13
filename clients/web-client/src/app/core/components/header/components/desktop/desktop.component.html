@@ -1,0 +1,31 @@
+<ul class="menu menu-horizontal px-1">
+  <ng-container *ngFor="let l of links.links">
+    <li class="disabled:pointer-events-none" [ngClass]="l.disabled ? 'disabled' : ''">
+      <a [routerLink]="l.path">
+        <div class="indicator p-1">
+          <h2 class="text-md">{{l.name}}</h2>
+          <span *ngIf="l.indicator" class="indicator-item indicator-top indicator-end badge"
+                [ngClass]=" 'badge-' + l.indicator.color" style="font-size: 9pt;">{{l.indicator.content}}</span>
+        </div>
+      </a>
+    </li>
+  </ng-container>
+  <li tabindex="0">
+    <details>
+      <summary>More</summary>
+      <ul class="shadow bg-base-200 px-5 py-3">
+        <ng-container *ngFor="let l of links.more">
+          <li class="disabled:pointer-events-none" [ngClass]="l.disabled ? 'disabled' : ''">
+            <a [routerLink]="l.path">
+              <div class="indicator p-1">
+                <h2 class="text-md">{{l.name}}</h2>
+                <span *ngIf="l.indicator" class="indicator-item indicator-top indicator-end badge"
+                      [ngClass]=" 'badge-' + l.indicator.color" style="font-size: 9pt;">{{l.indicator.content}}</span>
+              </div>
+            </a>
+          </li>
+        </ng-container>
+      </ul>
+    </details>
+  </li>
+</ul>

@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, OnDestroy} from '@angular/core';
-import {PageComponent} from "../../core/component/page-component/page.component";
 import {HeaderService} from "../../core/service/header.service";
 import {HeaderComponent} from "./components/header/header.component";
 

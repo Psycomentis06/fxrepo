@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {PageComponent} from "../core/component/page-component/page.component";
 import {Header, HeaderService} from "../core/service/header.service";
 
 @Component({

@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { DesktopComponent } from './desktop.component';
+import {DesktopComponent} from './desktop.component';
 
 describe('DesktopComponent', () => {
   let component: DesktopComponent;

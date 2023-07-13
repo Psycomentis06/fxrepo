@@ -1,5 +1,5 @@
 import {Injectable, Type} from '@angular/core';
-import {BehaviorSubject, Observable, Observer, Subject} from "rxjs";
+import {BehaviorSubject, Observable} from "rxjs";
 
 export interface Header {
   pre?: Type<any>
@@ -8,6 +8,7 @@ export interface Header {
   links: HeaderLinks;
   actions?: string[];
 }
+
 export interface HeaderLink {
   name: string;
   path: string;
@@ -15,6 +16,7 @@ export interface HeaderLink {
   disabled: boolean;
   indicator?: HeaderIndicator
 }
+
 export interface HeaderIndicator {
   color: string;
   content: string;
@@ -80,7 +82,7 @@ export class HeaderService {
     this._header.next(header)
   }
 
-  get  header(): Observable<Header>{
+  get header(): Observable<Header> {
     return this.$header
   }
 

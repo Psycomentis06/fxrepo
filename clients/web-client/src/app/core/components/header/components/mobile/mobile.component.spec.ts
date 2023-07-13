@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MobileComponent } from './mobile.component';
+import {MobileComponent} from './mobile.component';
 
 describe('MobileComponent', () => {
   let component: MobileComponent;

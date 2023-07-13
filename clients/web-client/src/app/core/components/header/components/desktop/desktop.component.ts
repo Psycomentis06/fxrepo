@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Subject, takeUntil} from "rxjs";
-import {HeaderLink, HeaderLinks, HeaderService} from "../../../service/header.service";
+import {HeaderLinks, HeaderService} from "../../../../service/header.service";
 
 @Component({
   selector: 'app-desktop',
@@ -19,6 +19,7 @@ export class DesktopComponent implements OnDestroy, OnInit {
       more: []
     }
   }
+
   ngOnInit() {
     this.headerService.header
       .pipe(takeUntil(this._destroyed))

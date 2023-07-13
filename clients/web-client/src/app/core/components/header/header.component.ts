@@ -1,17 +1,8 @@
-import {
-  AfterViewInit,
-  Component,
-  ComponentRef,
-  computed, ElementRef,
-  OnDestroy,
-  OnInit,
-  Type,
-  ViewContainerRef
-} from '@angular/core';
-import {Header, HeaderLink, HeaderService} from "../service/header.service";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Header, HeaderService} from "../../service/header.service";
 import {BreakpointObserver, Breakpoints} from "@angular/cdk/layout";
 import {filter, Subject, takeUntil} from "rxjs";
-import {ActivatedRoute, ActivationStart, Router, RoutesRecognized} from "@angular/router";
+import {ActivationStart, Router} from "@angular/router";
 
 @Component({
   selector: 'app-header',
@@ -24,6 +15,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   header: Header | undefined
   isScreenLarge: boolean
   _destoryed: Subject<void>
+
   constructor(
     private headerService: HeaderService,
     private breakpointObserver: BreakpointObserver,
@@ -44,8 +36,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.headerService.header
       .pipe(takeUntil(this._destoryed))
       .subscribe(o => {
-      this.header = o
-    })
+        this.header = o
+      })
 
     this.router.events
       .pipe(
@@ -59,7 +51,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
           this.headerPosition = d['header-position']
         else
           this.headerPosition = 'sticky'
-    })
+      })
   }
 
   ngOnDestroy() {
