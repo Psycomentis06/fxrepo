@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Location} from '@angular/common'
 
 @Component({
@@ -8,9 +8,15 @@ import {Location} from '@angular/common'
 })
 export class PostComponent {
 
+  imageId?: string
   constructor(private location: Location) {
   }
+
   goBack() {
     this.location.back()
+  }
+
+  imageUploadEvent(e: string) {
+    this.imageId = e
   }
 }

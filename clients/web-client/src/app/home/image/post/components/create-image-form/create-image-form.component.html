@@ -1,10 +1,13 @@
-<div class="post-image-form">
-  <form (click)="submit($event)">
+<div class="post-image-form relative">
+  <div *ngIf="disabled" class="absolute top-0 left-0 w-full h-full rounded-lg px-5 py-4 flex items-center justify-center">
+    <h1 class="md:text-xl text-center">You need to upload the image before submitting the data</h1>
+  </div>
+  <form (click)="submit($event)" [ngClass]="disabled ? 'invisible': ''">
     <div class="form-control w-full">
       <label class="label">
         <span class="label-text">Title</span>
       </label>
-      <input type="text" placeholder="Image title" class="input input-bordered hover:bg-base-300 active:scale-95 duration-100 transition w-full" />
+      <input [disabled]="disabled" type="text" placeholder="Image title" class="input input-bordered hover:bg-base-300 active:scale-95 duration-100 transition w-full" />
       <label class="label">
         <span class="label-text-alt"></span>
         <span class="label-text-alt">255</span>
@@ -15,7 +18,7 @@
       <label class="label">
         <span class="label-text">Description</span>
       </label>
-      <textarea class="textarea textarea-bordered h-24 active:scale-95 hover:bg-base-300 transition duration-100" placeholder="Image description"></textarea>
+      <textarea [disabled]="disabled" class="textarea textarea-bordered h-24 active:scale-95 hover:bg-base-300 transition duration-100" placeholder="Image description"></textarea>
       <label class="label">
         <span class="label-text-alt"></span>
         <span class="label-text-alt">1000</span>
@@ -27,7 +30,7 @@
       <label class="label">
         <span class="label-text">Category</span>
       </label>
-      <select class="select active:scale-95 hover:bg-base-300 transition duration-100">
+      <select [disabled]="disabled" class="select active:scale-95 hover:bg-base-300 transition duration-100">
         <option value="default" selected>Default</option>
         <option value="val1">Category1</option>
         <option value="val2">Category2</option>
@@ -41,7 +44,7 @@
       <label class="label">
         <span class="label-text">Visibility</span>
       </label>
-      <select class="select active:scale-95 hover:bg-base-300 transition duration-100">
+      <select  [disabled]="disabled" class="select active:scale-95 hover:bg-base-300 transition duration-100">
         <option value="true" selected>Public</option>
         <option value="false">Private</option>
       </select>
@@ -51,16 +54,16 @@
       <label class="label">
         <span class="label-text">Tags</span>
       </label>
-      <input type="text" placeholder="eg. tag1,tag2,tag3" class="input input-bordered hover:bg-base-300 active:scale-95 duration-100 transition w-full ">
+      <input [disabled]="disabled" type="text" placeholder="eg. tag1,tag2,tag3" class="input input-bordered hover:bg-base-300 active:scale-95 duration-100 transition w-full ">
     </div>
 
     <div class="form-control w-full my-7">
       <div class="flex items-center justify-start">
-        <span>Nsfw</span>
-        <input type="checkbox" class="checkbox mx-3 bg-base-100 hover:bg-base-300 active:scale-95 transition duration-100">
+        <span >Nsfw</span>
+        <input [disabled]="disabled" type="checkbox" class="checkbox mx-3 bg-base-100 hover:bg-base-300 active:scale-95 transition duration-100">
       </div>
     </div>
 
-    <input type="submit" value="submit" class="btn btn-primary w-full">
+    <input [disabled]="disabled" type="submit" value="submit" class="btn btn-primary w-full">
   </form>
 </div>

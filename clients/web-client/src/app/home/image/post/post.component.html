@@ -5,13 +5,13 @@
     </button>
   </div>
   <div class="flex items-center bg-base-200 p-5 md:rounded-xl md:shadow-xl w-full md:w-5/6">
-    <div class="flex flex-col w-full md:flex-row">
-      <div class="flex items-center w-1/2">
-        <app-create-image-form class="w-full" />
+    <div class="flex flex-col-reverse w-full md:flex-row">
+      <div class="flex items-center md:w-1/2">
+        <app-create-image-form [disabled]="imageId === undefined" class="w-full" />
       </div>
       <div class="divider lg:divider-horizontal"></div>
-      <div class="flex items-center justify-center w-1/2">
-        <app-upload-image-file class="w-full text-center" />
+      <div class="flex items-center justify-center md:w-1/2">
+        <app-upload-image-file (image)="imageUploadEvent($event)" class="w-full text-center" />
       </div>
     </div>
   </div>

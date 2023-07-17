@@ -10,9 +10,9 @@ import { CreateImageFormComponent } from './post/components/create-image-form/cr
 import { NgIconsModule } from '@ng-icons/core'
 import {
   heroPhoto,
-  heroArrowLeft
+  heroArrowLeft,
+  heroArrowUpOnSquare, heroXCircle
 } from '@ng-icons/heroicons/outline'
-
 
 
 @NgModule({
@@ -29,7 +29,9 @@ import {
     ImageRoutingModule,
     NgIconsModule.withIcons({
       heroPhoto,
-      heroArrowLeft
+      heroArrowLeft,
+      heroArrowUpOnSquare,
+      heroXCircle
     })
   ]
 })
