@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {fadeInOnEnterAnimation, fadeOutAnimation} from "angular-animations";
+import {ImageFileService} from "../../../../../services/image-file.service";
+import {ToastService} from "../../../../../core/service/toast.service";
 
 @Component({
   selector: 'app-upload-image-file',
@@ -18,6 +20,9 @@ export class UploadImageFileComponent {
   progress: number = 0
   progressText: string = 'Uploading...'
 
+  constructor(private imageFileService: ImageFileService, private toastService: ToastService) {
+  }
+
   removePreviewImage() {
     this.file = undefined
     this.imageLocalUrl = undefined
@@ -29,6 +34,10 @@ export class UploadImageFileComponent {
       return
     }
     this.progressInc()
+    /*this.imageFileService.uploadImage(this.file)
+      .subscribe(r => {
+        console.log(r)
+      })*/
   }
 
   progressInc() {
@@ -41,6 +50,10 @@ export class UploadImageFileComponent {
         this.progressText = 'finish'
         clearInterval(a)
         this.imageId.emit('imageId')
+        this.toastService.add({
+          id: Math.random(),
+          title: 'Image upload success',
+        })
       }
     }, 200)
   }

@@ -1,0 +1,17 @@
+<dialog #dialogElement *ngIf="modal" class="modal">
+  <div class="modal-box">
+    <button *ngIf="!modal.cornerClose" (click)="close()" class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+    <h3 *ngIf="modal.title" class="font-bold text-lg">{{modal.title}}</h3>
+    <ng-container *ngIf="modal.template; else modalContentTmp" >
+      <ng-template *ngComponentOutlet="modal.template" ></ng-template>
+    </ng-container>
+    <ng-template #modalContentTmp>
+      <p *ngIf="modal.content" class="py-4">{{modal.content}}</p>
+    </ng-template>
+    <div class="modal-action" *ngIf="modal.actions">
+      <button (click)="a.onClick && a.onClick()" *ngFor="let a of modal.actions" class="btn" [ngClass]="a.type" >
+        {{a.title}}
+      </button>
+    </div>
+  </div>
+</dialog>

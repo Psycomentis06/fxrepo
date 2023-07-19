@@ -6,10 +6,13 @@ import {FooterComponent} from './components/footer/footer.component';
 import {RouterModule} from "@angular/router";
 import {MobileComponent} from './components/header/components/mobile/mobile.component';
 import {DesktopComponent} from './components/header/components/desktop/desktop.component';
+import { NotificationsComponent } from './components/notifications/notifications.component';
+import { ToastsComponent } from './components/toasts/toasts.component';
+import { ModalComponent } from './components/modal/modal.component';
 
 
 @NgModule({
-  declarations: [LayoutComponent, HeaderComponent, FooterComponent, MobileComponent, DesktopComponent],
+  declarations: [LayoutComponent, HeaderComponent, FooterComponent, MobileComponent, DesktopComponent, NotificationsComponent, ToastsComponent, ModalComponent],
   imports: [
     CommonModule,
     RouterModule,
