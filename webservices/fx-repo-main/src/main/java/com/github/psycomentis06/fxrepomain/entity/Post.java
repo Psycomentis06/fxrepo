@@ -9,6 +9,7 @@ import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "fx_post")
@@ -51,6 +52,11 @@ public class Post {
     private void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
+        var uuid = UUID.randomUUID().toString().substring(0, 6);
+        this.slug = this.title
+                .strip()
+                .toLowerCase()
+                .replace(' ', '-') + '-' + uuid;
     }
 
     @PreUpdate
