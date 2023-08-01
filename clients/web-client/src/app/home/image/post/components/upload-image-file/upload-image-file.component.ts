@@ -2,6 +2,9 @@ import {Component, EventEmitter, Output} from '@angular/core';
 import {fadeInOnEnterAnimation, fadeOutAnimation} from "angular-animations";
 import {ImageFileService} from "../../../../../services/image-file.service";
 import {ToastService} from "../../../../../core/service/toast.service";
+import {HttpEventType} from "@angular/common/http";
+import {ResponseModel} from "../../../../../core/models/response";
+import {ImageFileModel} from "../../../../../models/image-file";
 
 @Component({
   selector: 'app-upload-image-file',
@@ -33,11 +36,18 @@ export class UploadImageFileComponent {
       alert("Image empty")
       return
     }
-    this.progressInc()
-    /*this.imageFileService.uploadImage(this.file)
-      .subscribe(r => {
-        console.log(r)
-      })*/
+    //this.progressInc()
+    this.imageFileService.uploadImage(this.file).subscribe(res => {
+      if (res.type === HttpEventType.UploadProgress) {
+        this.progressText = 'Uploading...'
+        this.progress = Math.round(100 * res.loaded / (res.total || 0))
+      }
+
+      if (res.type === HttpEventType.Response) {
+        const d = res.body as ResponseModel<ImageFileModel>
+        console.log(d.message)
+      }
+    })
   }
 
   progressInc() {

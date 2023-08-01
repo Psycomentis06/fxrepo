@@ -16,6 +16,9 @@ export class ImageFileService {
   uploadImage(file: File) {
     const fd = new FormData()
     fd.set('file', file)
-    return this.http.post<ResponseModel<ImageFileModel>>(this.UPLOAD_IMAGE_FILE_ENDPOINT, fd)
+    return this.http.post<any>(this.UPLOAD_IMAGE_FILE_ENDPOINT, fd, {
+      reportProgress: true,
+      observe: 'events'
+    })
   }
 }
