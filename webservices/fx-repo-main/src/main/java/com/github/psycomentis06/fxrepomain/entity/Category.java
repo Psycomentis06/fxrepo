@@ -4,6 +4,7 @@ import com.github.psycomentis06.fxrepomain.validator.RgbaColorString;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.URL;
 
@@ -13,6 +14,7 @@ import java.util.Set;
 @Table(name = "fx_category")
 @Data
 @NoArgsConstructor
+@Accessors(chain = true)
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

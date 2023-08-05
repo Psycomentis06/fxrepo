@@ -5,10 +5,7 @@ import java.util.regex.Pattern;
 public class Color {
     public static boolean isRgba(String color) {
         String ns = color.replace(" ", "");
-        String regex = "rgba\\(\\s*\\d{0,3}\\s*,\\s*\\d{0,3}\\s*,\\s*\\d{0,3}\\s*,?\\s*(\\d*\\.\\d+)?\\)";
-        var p = Pattern.compile(regex);
-        var rgx = p.matcher(color);
-        if (rgx.matches()) {
+        if (ns.startsWith("rgba(")) {
             int r, g, b;
             float a;
             ns = ns.substring(4, ns.indexOf(")"));
