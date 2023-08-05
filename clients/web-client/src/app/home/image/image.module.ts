@@ -13,6 +13,7 @@ import {
   heroArrowLeft,
   heroArrowUpOnSquare, heroXCircle
 } from '@ng-icons/heroicons/outline'
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -27,6 +28,7 @@ import {
   imports: [
     CommonModule,
     ImageRoutingModule,
+    ReactiveFormsModule,
     NgIconsModule.withIcons({
       heroPhoto,
       heroArrowLeft,
