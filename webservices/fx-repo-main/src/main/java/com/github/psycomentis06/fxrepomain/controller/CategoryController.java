@@ -3,14 +3,17 @@ package com.github.psycomentis06.fxrepomain.controller;
 import com.github.psycomentis06.fxrepomain.entity.Category;
 import com.github.psycomentis06.fxrepomain.entity.PostType;
 import com.github.psycomentis06.fxrepomain.model.CategoryCreateModel;
+import com.github.psycomentis06.fxrepomain.model.ExceptionModel;
 import com.github.psycomentis06.fxrepomain.model.ResponseObjModel;
 import com.github.psycomentis06.fxrepomain.repository.CategoryRepository;
 import com.github.psycomentis06.fxrepomain.service.CategoryService;
+import com.github.psycomentis06.fxrepomain.util.Sort;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.sql.Timestamp;
 
 @RestController
 @RequestMapping("/api/v1/category")
@@ -46,24 +49,32 @@ public class CategoryController {
         return new ResponseEntity<>(res, res.getStatus());
     }
 
-    @GetMapping("/list")
+    @GetMapping("{type}/list")
     public ResponseEntity<Object> list(
+            @PathVariable(value = "type") String type,
             @RequestParam(value = "p", defaultValue = "0") int page,
             @RequestParam(value = "l", defaultValue = "15") int limit,
             @RequestParam(value = "s", defaultValue = "name") String sortAttribute,
             @RequestParam(value = "o", defaultValue = "asc") String sortDirection,
             @RequestParam(value = "q", defaultValue = "") String query
     ) {
-        Sort.Direction sortD;
-        if (sortDirection.equals("desc") || sortDirection.equals("d")) {
-            sortD = Sort.Direction.DESC;
-        } else {
-            sortD = Sort.Direction.ASC;
+        PostType postType;
+        try {
+            postType = com.github.psycomentis06.fxrepomain.util.PostType.getPostType(type);
+        } catch (IllegalArgumentException e) {
+            var resErr = new ExceptionModel();
+            resErr
+                    .setTimestamp(new Timestamp(System.currentTimeMillis()))
+                    .setStatus(HttpStatus.BAD_REQUEST)
+                    .setCode(HttpStatus.BAD_REQUEST.value())
+                    .setMessage(e.getMessage());
+            return new ResponseEntity<>(resErr, resErr.getStatus());
         }
-        var sort = Sort.by(sortD, sortAttribute);
-        var pageable = PageRequest.of(page, limit, sort);
+        org.springframework.data.domain.Sort.Direction sortD = Sort.getSortDirection(sortDirection);
+        sortAttribute = Sort.getSortAttributeName(Category.class, sortAttribute, "id");
+        var pageable = PageRequest.of(page, limit, sortD, sortAttribute);
 //        var categories = categoryRepository.findByNameContainsIgnoreCase(CategoryListProjection.class, query, pageable);
-        var categories = categoryService.getCategories(PostType.IMAGE, query, pageable);
+        var categories = categoryService.getCategories(postType, query, pageable);
         var res = new ResponseObjModel();
         res
                 .setData(categories)

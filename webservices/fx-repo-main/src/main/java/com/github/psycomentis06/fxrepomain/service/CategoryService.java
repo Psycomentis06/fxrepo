@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class CategoryService {
@@ -20,6 +22,8 @@ public class CategoryService {
     private RedisTemplate<String, Object> redisTemplate;
 
     public static final String IMAGE_CATEGORY_LIST_KEY = "category:list";
+    public static final String IMAGE_CATEGORY_LIST_HASHMAP_TOTAL_NUMBER_KEY = "total-number";
+    public static final String IMAGE_CATEGORY_LIST_HASHMAP_DATA_LIST_KEY = "data-list";
 
     public CategoryService(CategoryRepository categoryRepository, PostRepository postRepository, RedisTemplate<String, Object> redisTemplate) {
         this.categoryRepository = categoryRepository;
@@ -27,10 +31,15 @@ public class CategoryService {
         this.redisTemplate = redisTemplate;
     }
 
+    // TODO Some "unsafe" casts that can't be checked in compile time. needs improvements in the future
+    @SuppressWarnings("unchecked")
     public Object getCategories(PostType type, String query, Pageable pageable) {
         var cachedData = redisTemplate.opsForValue().get(IMAGE_CATEGORY_LIST_KEY);
         if (cachedData != null) {
-            return cachedData;
+            HashMap<String, Object> hashMap = (HashMap<String, Object>) cachedData;
+            var totalNumber = (long) hashMap.get(IMAGE_CATEGORY_LIST_HASHMAP_TOTAL_NUMBER_KEY);
+            var dataList = (List<CategoryListModel>) hashMap.get(IMAGE_CATEGORY_LIST_HASHMAP_DATA_LIST_KEY);
+            return new PageImpl<>(dataList, pageable, totalNumber);
         }
         var categories = categoryRepository.findByNameContainsIgnoreCase(query, type, pageable);
         var catList = new ArrayList<CategoryListModel>();
@@ -52,7 +61,10 @@ public class CategoryService {
                 });
         var pageRes = new PageImpl<>(catList, pageable, categories.getTotalElements());
         // Cache for 12 hours as this an intensive operation
-        redisTemplate.opsForValue().set(IMAGE_CATEGORY_LIST_KEY, pageRes, Duration.ofHours(12));
+        HashMap<String, Object> cacheMap = new HashMap<>();
+        cacheMap.put(IMAGE_CATEGORY_LIST_HASHMAP_TOTAL_NUMBER_KEY, categories.getTotalElements());
+        cacheMap.put(IMAGE_CATEGORY_LIST_HASHMAP_DATA_LIST_KEY, catList);
+        redisTemplate.opsForValue().set(IMAGE_CATEGORY_LIST_KEY, cacheMap, Duration.ofHours(12));
         return pageRes;
     }
 
