@@ -2,6 +2,7 @@ package com.github.psycomentis06.fxrepomain.controller;
 
 import com.github.psycomentis06.fxrepomain.entity.Category;
 import com.github.psycomentis06.fxrepomain.entity.ImagePost;
+import com.github.psycomentis06.fxrepomain.entity.PostType;
 import com.github.psycomentis06.fxrepomain.entity.Tag;
 import com.github.psycomentis06.fxrepomain.model.ImagePostCreateModel;
 import com.github.psycomentis06.fxrepomain.model.ResponseObjModel;
@@ -45,6 +46,7 @@ public class ImagePostController {
         ImagePost imagePost = new ImagePost();
         imagePost.setImage(imageFile);
         imagePost.setUserId("HelloHowAreYou");
+        imagePost.setPostType(PostType.IMAGE);
         System.out.println(postData.getTags().stream().findFirst());
         Set<Tag> tags = new HashSet<>();
         postData.getTags().forEach(
@@ -54,7 +56,7 @@ public class ImagePostController {
                 }
         );
         imagePost.setTags(tags);
-        Category category = categoryRepository.findById(postData.getCategory()).orElseThrow(EntityNotFoundException::new);
+        Category category = categoryRepository.findById(postData.getCategory()).orElseThrow(() -> new EntityNotFoundException("Category with id %s not found".formatted(postData.getImage())));
         imagePost.setCategory(category);
         imagePost.setTitle(postData.getTitle());
         imagePost.setContent(postData.getContent());

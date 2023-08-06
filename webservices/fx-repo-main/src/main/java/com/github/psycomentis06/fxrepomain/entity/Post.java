@@ -30,6 +30,10 @@ public class Post {
     private LocalDateTime createdAt;
     @PastOrPresent
     private LocalDateTime updatedAt;
+
+    @Enumerated
+    private PostType postType;
+
     @NotNull
     private String userId;
     // Visibility either public or private

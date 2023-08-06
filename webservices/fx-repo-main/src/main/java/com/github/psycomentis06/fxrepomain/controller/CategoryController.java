@@ -1,12 +1,12 @@
 package com.github.psycomentis06.fxrepomain.controller;
 
 import com.github.psycomentis06.fxrepomain.entity.Category;
+import com.github.psycomentis06.fxrepomain.entity.PostType;
 import com.github.psycomentis06.fxrepomain.model.CategoryCreateModel;
 import com.github.psycomentis06.fxrepomain.model.ResponseObjModel;
-import com.github.psycomentis06.fxrepomain.projection.CategoryListProjection;
 import com.github.psycomentis06.fxrepomain.repository.CategoryRepository;
+import com.github.psycomentis06.fxrepomain.service.CategoryService;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/category")
 public class CategoryController {
     private CategoryRepository categoryRepository;
+    private CategoryService categoryService;
 
-    public CategoryController(CategoryRepository categoryRepository) {
+    public CategoryController(CategoryRepository categoryRepository, CategoryService categoryService) {
         this.categoryRepository = categoryRepository;
+        this.categoryService = categoryService;
     }
 
     @PostMapping("/new")
@@ -60,7 +62,8 @@ public class CategoryController {
         }
         var sort = Sort.by(sortD, sortAttribute);
         var pageable = PageRequest.of(page, limit, sort);
-        var categories = categoryRepository.findByNameContainsIgnoreCase(CategoryListProjection.class, query, pageable);
+//        var categories = categoryRepository.findByNameContainsIgnoreCase(CategoryListProjection.class, query, pageable);
+        var categories = categoryService.getCategories(PostType.IMAGE, query, pageable);
         var res = new ResponseObjModel();
         res
                 .setData(categories)
