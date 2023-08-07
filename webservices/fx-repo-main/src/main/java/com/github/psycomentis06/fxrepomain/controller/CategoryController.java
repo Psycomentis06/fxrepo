@@ -7,8 +7,8 @@ import com.github.psycomentis06.fxrepomain.model.ExceptionModel;
 import com.github.psycomentis06.fxrepomain.model.ResponseObjModel;
 import com.github.psycomentis06.fxrepomain.repository.CategoryRepository;
 import com.github.psycomentis06.fxrepomain.service.CategoryService;
-import com.github.psycomentis06.fxrepomain.util.Sort;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -54,8 +54,6 @@ public class CategoryController {
             @PathVariable(value = "type") String type,
             @RequestParam(value = "p", defaultValue = "0") int page,
             @RequestParam(value = "l", defaultValue = "15") int limit,
-            @RequestParam(value = "s", defaultValue = "name") String sortAttribute,
-            @RequestParam(value = "o", defaultValue = "asc") String sortDirection,
             @RequestParam(value = "q", defaultValue = "") String query
     ) {
         PostType postType;
@@ -70,9 +68,7 @@ public class CategoryController {
                     .setMessage(e.getMessage());
             return new ResponseEntity<>(resErr, resErr.getStatus());
         }
-        org.springframework.data.domain.Sort.Direction sortD = Sort.getSortDirection(sortDirection);
-        sortAttribute = Sort.getSortAttributeName(Category.class, sortAttribute, "id");
-        var pageable = PageRequest.of(page, limit, sortD, sortAttribute);
+        var pageable = PageRequest.of(page, limit, Sort.Direction.ASC, "name");
 //        var categories = categoryRepository.findByNameContainsIgnoreCase(CategoryListProjection.class, query, pageable);
         var categories = categoryService.getCategories(postType, query, pageable);
         var res = new ResponseObjModel();
