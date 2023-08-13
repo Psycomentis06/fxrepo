@@ -29,36 +29,74 @@ services:
     container_name: fx-minio-container
     command: server --console-address ":9001" /data
     ports:
-      -  "9000:9000"
-      -  "9001:9001"
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio-data-volume:/data
     networks:
       - minio-network
-  fx-zookeeper:
-    image: ubuntu/zookeeper
-    container_name: fx-zk-container
-    networks:
-      - zookeeper-network
+  fx-kafka:
+    image: 'bitnami/kafka:latest'
     ports:
-      - ":2181"
-  fx-apache_kafka:
-    image: ubuntu/kafka
+      - '9092:9092'
     networks:
-      - zookeeper-network
       - kafka-network
     environment:
-      - ZOOKEEPER_HOST=fx-zk-container
-      - ZOOKEEPER_PORT=2181
-    ports:
-      - ":9092"
-    depends_on:
-      - fx-zookeeper
+      - KAFKA_CFG_NODE_ID=0
+      - KAFKA_CFG_PROCESS_ROLES=controller,broker
+      - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@fx-kafka:9093
+      - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
+  #  fx-zookeeper:
+  #    image: ubuntu/zookeeper
+  #    container_name: fx-zookeeper-container
+  #    networks:
+  #      - zookeeper-network
+  #    ports:
+  #      - ":2181"
+  #  fx-apache_kafka:
+  #    image: ubuntu/kafka
+  #    container_name: fx-apache_kafka-container
+  #    networks:
+  #      - zookeeper-network
+  #      - kafka-network
+  #    environment:
+  #      - ZOOKEEPER_HOST=fx-zookeeper-container
+  #      - ZOOKEEPER_PORT=2181
+  #      - KAFKA_ADVERTISED_HOST_NAME=fx-apache_kafka-container
+  #      - KAFKA_ADVERTISED_PORT=9092
+  #    ports:
+  #      - "9092:9092"
+  #    depends_on:
+  #      - fx-zookeeper
+  #  zookeeper:
+  #    image: confluentinc/cp-zookeeper:7.3.0
+  #    hostname: zookeeper
+  #    container_name: zookeeper
+  #    environment:
+  #      ZOOKEEPER_CLIENT_PORT: 2181
+  #      ZOOKEEPER_TICK_TIME: 2000
+  #  broker:
+  #    image: confluentinc/cp-kafka:7.3.0
+  #    container_name: broker
+  #    ports:
+  #      - "9092:9092"
+  #    depends_on:
+  #      - zookeeper
+  #    environment:
+  #      KAFKA_BROKER_ID: 1
+  #      KAFKA_ZOOKEEPER_CONNECT: 'zookeeper:2181'
+  #      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_INTERNAL:PLAINTEXT
+  #      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092,PLAINTEXT_INTERNAL://broker:29092
+  #      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+  #      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+  #      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
   fx-redis:
     # For dev we are using only one redis instance
     image: redis:7-alpine
     ports:
-      -  "6379:6379"
+      - "6379:6379"
     networks:
       redis-network:
   fx-preprocessing:
@@ -86,7 +124,7 @@ services:
       - MAIN_DB_PASSWORD=postgres
       - MAIN_DB_CONNECTION_STRING=jdbc:postgresql://fx-postgresql:5432/fx_repo_main
     volumes:
-      - "./fx-repo-main:/usr/src/app"
+      - "./fx-repo-main:/usr/src/application"
     ports:
       - "9057:8000"
     networks:
