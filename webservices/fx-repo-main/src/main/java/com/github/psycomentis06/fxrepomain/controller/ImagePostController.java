@@ -7,13 +7,10 @@ import com.github.psycomentis06.fxrepomain.entity.Tag;
 import com.github.psycomentis06.fxrepomain.model.ImagePostCreateModel;
 import com.github.psycomentis06.fxrepomain.model.ResponseObjModel;
 import com.github.psycomentis06.fxrepomain.repository.CategoryRepository;
-import com.github.psycomentis06.fxrepomain.repository.FileVariantRepository;
 import com.github.psycomentis06.fxrepomain.repository.ImageFileRepository;
 import com.github.psycomentis06.fxrepomain.repository.ImagePostRepository;
-import com.github.psycomentis06.fxrepomain.service.StorageService;
 import com.github.psycomentis06.fxrepomain.service.TagService;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,6 +27,7 @@ public class ImagePostController {
     private CategoryRepository categoryRepository;
     private ImageFileRepository imageFileRepository;
 
+
     public ImagePostController(ImagePostRepository imagePostRepository, TagService tagService, CategoryRepository categoryRepository, ImageFileRepository imageFileRepository) {
         this.imagePostRepository = imagePostRepository;
         this.tagService = tagService;
@@ -40,7 +38,7 @@ public class ImagePostController {
     @PostMapping("/new")
     public ResponseEntity<ResponseObjModel> createPost(
             @RequestBody ImagePostCreateModel postData
-            ) {
+    ) {
         var imageFileOpt = imageFileRepository.findById(postData.getImage());
         var imageFile = imageFileOpt.orElseThrow(() -> new EntityNotFoundException("Image file not found"));
         ImagePost imagePost = new ImagePost();
@@ -56,7 +54,7 @@ public class ImagePostController {
                 }
         );
         imagePost.setTags(tags);
-        Category category = categoryRepository.findById(postData.getCategory()).orElseThrow(() -> new EntityNotFoundException("Category with id %s not found".formatted(postData.getImage())));
+        Category category = categoryRepository.findById(postData.getCategory()).orElseThrow(() -> new EntityNotFoundException("Category with id %s not found".formatted(postData.getCategory())));
         imagePost.setCategory(category);
         imagePost.setTitle(postData.getTitle());
         imagePost.setContent(postData.getContent());
