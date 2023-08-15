@@ -9,6 +9,7 @@ import com.github.psycomentis06.fxrepomain.model.ResponseObjModel;
 import com.github.psycomentis06.fxrepomain.repository.CategoryRepository;
 import com.github.psycomentis06.fxrepomain.repository.ImageFileRepository;
 import com.github.psycomentis06.fxrepomain.repository.ImagePostRepository;
+import com.github.psycomentis06.fxrepomain.service.KafkaService;
 import com.github.psycomentis06.fxrepomain.service.TagService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -26,13 +27,14 @@ public class ImagePostController {
     private TagService tagService;
     private CategoryRepository categoryRepository;
     private ImageFileRepository imageFileRepository;
+    private KafkaService kafkaService;
 
-
-    public ImagePostController(ImagePostRepository imagePostRepository, TagService tagService, CategoryRepository categoryRepository, ImageFileRepository imageFileRepository) {
+    public ImagePostController(ImagePostRepository imagePostRepository, TagService tagService, CategoryRepository categoryRepository, ImageFileRepository imageFileRepository, KafkaService kafkaService) {
         this.imagePostRepository = imagePostRepository;
         this.tagService = tagService;
         this.categoryRepository = categoryRepository;
         this.imageFileRepository = imageFileRepository;
+        this.kafkaService = kafkaService;
     }
 
     @PostMapping("/new")
@@ -60,8 +62,8 @@ public class ImagePostController {
         imagePost.setContent(postData.getContent());
         imagePost.setPublik(postData.isPublik());
         imagePost.setNsfw(postData.isNsfw());
-
         var imp = imagePostRepository.save(imagePost);
+        kafkaService.publishNewImagePostEvent(imp);
         var resObj = new ResponseObjModel();
         resObj
                 .setData(imp)
