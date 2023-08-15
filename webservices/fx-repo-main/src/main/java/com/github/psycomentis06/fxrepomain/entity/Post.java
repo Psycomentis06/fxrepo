@@ -1,5 +1,6 @@
 package com.github.psycomentis06.fxrepomain.entity;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PastOrPresent;
@@ -37,6 +38,7 @@ public class Post {
     @NotNull
     private String userId;
     // Visibility either public or private
+    @JsonAlias("public")
     private boolean publik = true;
     // This means that the post is not ready yet = file still being processed and not uploaded to the
     // main storage server
