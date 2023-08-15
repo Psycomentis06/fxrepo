@@ -23,6 +23,7 @@ public class User {
     private String email;
     private String username;
     private String name;
+    private String surname;
     @Pattern(regexp = PASSWORD_PATTERN)
     private String password;
     @ManyToMany
