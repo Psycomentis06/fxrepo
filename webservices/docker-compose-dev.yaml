@@ -123,8 +123,10 @@ services:
       - MAIN_DB_USERNAME=postgres
       - MAIN_DB_PASSWORD=postgres
       - MAIN_DB_CONNECTION_STRING=jdbc:postgresql://fx-postgresql:5432/fx_repo_main
+      - STORAGE_ROOT_DIR=${HOME}/fx-repo-storage
     volumes:
       - "./fx-repo-main:/usr/src/application"
+      - "${HOME}/fx-repo-storage:${HOME}/fx-repo-storage"
     ports:
       - "9057:8000"
     networks:
