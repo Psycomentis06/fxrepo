@@ -9,9 +9,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Integer> {
     <T> Page<T> findByNameContainsIgnoreCase(Class<T> t, String name, Pageable pageable);
+
+    Optional<Category> findByNameIgnoreCase(String name);
 
     @Query(
             value = "SELECT c FROM Category c JOIN Post p ON c.id = p.category.id AND p.postType = ?2 WHERE c.name LIKE %?1%"

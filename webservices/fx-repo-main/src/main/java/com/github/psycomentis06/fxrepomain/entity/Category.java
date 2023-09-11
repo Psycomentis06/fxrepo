@@ -20,6 +20,7 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private int id;
     @Length(max = 50, message = "Category name is limited to 50 characters")
+    @Column(unique = true)
     private String name;
     @Length(max = 1000, message = "Description is limited to 1000 characters")
     @Column(columnDefinition = "TEXT")

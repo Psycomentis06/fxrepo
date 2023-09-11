@@ -7,6 +7,7 @@ import com.github.psycomentis06.fxrepomain.model.ExceptionModel;
 import com.github.psycomentis06.fxrepomain.model.ResponseObjModel;
 import com.github.psycomentis06.fxrepomain.repository.CategoryRepository;
 import com.github.psycomentis06.fxrepomain.service.CategoryService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping("/new")
+    @PostMapping("new")
     public ResponseEntity<ResponseObjModel> create(
             @RequestBody CategoryCreateModel category
     ) {
@@ -46,6 +47,20 @@ public class CategoryController {
                 .setMessage("Category created successfully")
                 .setCode(HttpStatus.CREATED.value())
                 .setStatus(HttpStatus.CREATED);
+        return new ResponseEntity<>(res, res.getStatus());
+    }
+
+    @GetMapping(value = "{name}")
+    public ResponseEntity<ResponseObjModel> getCategoryByName(
+            @PathVariable("name") String name) {
+        var category = categoryRepository.findByNameIgnoreCase(name);
+        category.orElseThrow(() -> new EntityNotFoundException("Category with name %s not found".formatted(name)));
+        var res = new ResponseObjModel();
+        res
+                .setData(category.get())
+                .setMessage("Category found")
+                .setStatus(HttpStatus.OK)
+                .setCode(HttpStatus.OK.value());
         return new ResponseEntity<>(res, res.getStatus());
     }
 
@@ -79,4 +94,6 @@ public class CategoryController {
                 .setCode(HttpStatus.OK.value());
         return new ResponseEntity<>(res, res.getStatus());
     }
+
+
 }
