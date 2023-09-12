@@ -31,6 +31,7 @@ public class TypesenseServiceImpl implements TypesenseService {
             log.info("Creating collection");
         }
         List<Field> fields = new ArrayList<>();
+        fields.add(new Field().name("id").type(FieldTypes.STRING));
         fields.add(new Field().name("slug").type(FieldTypes.STRING));
         fields.add(new Field().name("title").type(FieldTypes.STRING).facet(true).sort(true));
         fields.add(new Field().name("content").type(FieldTypes.STRING));
