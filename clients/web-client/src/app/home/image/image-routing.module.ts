@@ -3,6 +3,7 @@ import {Route, RouterModule} from "@angular/router";
 import {ImageComponent} from "./image.component";
 import {ImagesComponent} from "./images/images.component";
 import {PostComponent} from "./post/post.component";
+import {ImageDetailsComponent} from "./image-details/image-details.component";
 
 const routes: Route[] = [
   {
@@ -23,6 +24,10 @@ const routes: Route[] = [
           title: "Post image",
           'header-hidden': true
         }
+      },
+      {
+        path: ':slug',
+        component: ImageDetailsComponent
       }
     ]
   }

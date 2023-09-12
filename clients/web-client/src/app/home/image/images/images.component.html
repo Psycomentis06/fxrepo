@@ -1,1 +1,17 @@
-<p>images works!</p>
+<div class="flex flex-wrap" style="gap: 10px">
+  <button (click)="showImageDetailsDialog(ind + '')" *ngFor="let i of images;index as ind"
+          class="w-96 h-56 flex-grow-[1] transition duration-100 active:scale-90">
+    <app-image-card/>
+  </button>
+
+  <dialog #imageDetailsDialog class="modal">
+    <div class="modal-box w-2/3">
+      <button class="absolute top-0 right-0 btn btn-ghost btn-circle"
+              (click)="closeModal()">
+        <ng-icon name="heroXCircle" size="28px"/>
+      </button>
+      <!--ngIf so the component gets destroyed and renders after every closing of the dialog-->
+      <app-image-details *ngIf="imageDetailsDialog.open" [slug]="selectedImageSlug"/>
+    </div>
+  </dialog>
+</div>
