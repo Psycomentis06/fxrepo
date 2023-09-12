@@ -39,4 +39,10 @@ public class Category {
     private String color;
     @OneToMany(mappedBy = "category")
     private Set<Post> posts;
+
+    @PrePersist
+    @PreUpdate
+    void defaultOp() {
+        this.name = name.toLowerCase();
+    }
 }
