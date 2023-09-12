@@ -3,6 +3,7 @@ package com.github.psycomentis06.fxrepomain;
 import com.github.psycomentis06.fxrepomain.properties.StorageProperties;
 import com.github.psycomentis06.fxrepomain.service.KafkaService;
 import com.github.psycomentis06.fxrepomain.service.StorageService;
+import com.github.psycomentis06.fxrepomain.service.TypesenseService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -30,7 +31,7 @@ public class FxRepoMainApplication {
     }
 
     @Bean
-    public CommandLineRunner init(StorageService storageService) {
+    public CommandLineRunner init(StorageService storageService, TypesenseService typesenseService) {
         return (args) -> {
             var s = storageService.init();
             switch (s) {
@@ -38,6 +39,7 @@ public class FxRepoMainApplication {
                 case UPLOAD_DIR_CREATED -> log.info("Upload directory created");
                 default -> log.info("Upload dir: No action taken");
             }
+            typesenseService.init();
         };
     }
 

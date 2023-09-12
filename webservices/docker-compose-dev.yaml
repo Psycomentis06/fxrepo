@@ -124,6 +124,10 @@ services:
       - MAIN_DB_PASSWORD=postgres
       - MAIN_DB_CONNECTION_STRING=jdbc:postgresql://fx-postgresql:5432/fx_repo_main
       - STORAGE_ROOT_DIR=${HOME}/fx-repo-storage
+      - TYPESENSE_API_KEY=dev_api_key_123
+      - TYPESENSE_HOST=fx-typesense
+      - TYPESENSE_PORT=8108
+      - TYPESENSE_PROTOCOL=http
     volumes:
       - "./fx-repo-main:/usr/src/application"
       - "${HOME}/fx-repo-storage:${HOME}/fx-repo-storage"
@@ -135,6 +139,7 @@ services:
       - redis-network
       - kafka-network
       - keycloak-network
+      - typesense-network
   fx-postgresql:
     image: postgres:15-bookworm
     environment:
@@ -173,6 +178,8 @@ services:
       environment:
         TYPESENSE_DATA_DIR: /data
         TYPESENSE_API_KEY: dev_api_key_123
+      networks:
+        - typesense-network
 
 
 
@@ -189,3 +196,4 @@ networks:
   postgresql-network:
   main-service-network:
   keycloak-network:
+  typesense-network:
