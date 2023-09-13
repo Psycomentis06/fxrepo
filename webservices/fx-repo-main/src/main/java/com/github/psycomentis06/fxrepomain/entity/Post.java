@@ -21,7 +21,6 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    @Length(max = 255, min = 10, message = "Slug must be between 10 and 255 characters")
     private String slug;
     @Length(max = 255, min = 10, message = "Slug must be between 10 and 255 characters")
     private String title;
