@@ -1,3 +1,17 @@
 app_version: "0.0.1"
 redis:
-  endpoint: ${REDIS:"localhost:6379"}
+  host: ${REDIS_HOST:localhost}
+  port: ${REDIS_PORT:6379}
+  password: ${REDIS_PASSWORD:}
+  db: ${REDIS_DB:0}
+kafka:
+  bootstrap:
+    servers: ${KAFKA_HOST:localhost:9092}
+  group:
+    id: ${KAFKA_GROUP_ID:preprocessing_group}
+  auto:
+    offset:
+      reset: ${KAFKA_AUTO_OFFSET_RESET:earliest}
+celery:
+  broker: ${CELERY_BROKER_URL:redis://redis:6379/0}
+  backend: ${CELERY_RESULT_BACKEND:redis://redis:6379/0}

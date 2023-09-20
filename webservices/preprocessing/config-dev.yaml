@@ -6,6 +6,14 @@ redis:
   db: ${REDIS_DB:0}
 kafka:
   bootstrap:
-    servers: ${KAFKA_HOST:localhost}
+    servers: ${KAFKA_HOST:localhost:9092}
   group:
-    id: ${KAFKA_GROUP_ID:test-group}
+    id: ${KAFKA_GROUP_ID:preprocessing_group}
+  auto:
+    offset:
+      reset: ${KAFKA_AUTO_OFFSET_RESET:earliest}
+celery:
+  broker: ${CELERY_BROKER_URL:redis://redis:6379/0}
+  backend: ${CELERY_RESULT_BACKEND:redis://redis:6379/0}
+storage:
+  root_dir: ${STORAGE_ROOT_DIR:/tmp/fx-repo/preprocessing-service}
