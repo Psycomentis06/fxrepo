@@ -1,5 +1,9 @@
+import datetime
+from dataclasses import dataclass
 from enum import Enum
-from typing import TypedDict, List
+from typing import TypedDict, List, Generic, TypeVar
+
+T = TypeVar('T')
 
 
 class Actions(Enum):
@@ -21,9 +25,11 @@ class Status(Enum):
     IN_PROGRESS = 'In-progress'
 
 
-class KafkaData(TypedDict):
-    user_id: str
-    post_id: str
+@dataclass
+class KafkaData(TypedDict, Generic[T]):
+    eventId: str
+    eventTime: datetime.datetime
     action: Actions
     target: List[Targets]
     status: Status
+    payload: T
