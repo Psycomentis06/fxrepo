@@ -15,3 +15,5 @@ kafka:
 celery:
   broker: ${CELERY_BROKER_URL:redis://redis:6379/0}
   backend: ${CELERY_RESULT_BACKEND:redis://redis:6379/0}
+storage:
+  root_dir: ${STORAGE_ROOT_DIR:/tmp/fx-repo/preprocessing-service}
