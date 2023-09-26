@@ -104,7 +104,7 @@ services:
       context: "./preprocessing"
       dockerfile: "Dockerfile"
     environment:
-      - DEV_ENV=true
+      - PROD_ENV=false
       - REDIS_HOST=fx-redis
       - REDIS_PORT=6379
       - KAFKA_HOST=fx-kafka
