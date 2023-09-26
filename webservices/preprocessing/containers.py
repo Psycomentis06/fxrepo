@@ -3,6 +3,8 @@ from redis import Redis
 from confluent_kafka import Consumer, Producer
 import logging
 import os
+
+from services.cache import Cache
 from services.storage import Storage
 
 
@@ -37,9 +39,10 @@ def create_logger():
 
 def create_container():
     class Container(containers.DeclarativeContainer):
-        _config_files = ['config.yaml']
-        if os.getenv("DEV_ENV") == 'true':
-            _config_files.append('config-dev.yaml')
+        _root_dir_path = os.path.dirname(os.path.abspath(__file__))
+        _config_files = [os.path.join(_root_dir_path, 'config.yaml')]
+        if os.getenv("PROD_ENV") != 'true':
+            _config_files.append(os.path.join(_root_dir_path, 'config-dev.yaml'))
         config = providers.Configuration(yaml_files=_config_files)
         wiring_config = containers.WiringConfiguration(modules=[])
 
@@ -74,6 +77,12 @@ def create_container():
             Storage,
             root_dir=config.storage.root_dir,
             logger=logger_service,
+        )
+
+        image_caching_service = providers.Factory(
+            Cache,
+            scope="images",
+            storage_service=storage_service
         )
 
     return Container()
