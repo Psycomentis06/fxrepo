@@ -6,7 +6,7 @@ from .kafka_post import Tag, Category
 
 @dataclass
 class ImageVariantData(TypedDict):
-    id: int
+    id: str
     original: bool
     width: int
     height: int
