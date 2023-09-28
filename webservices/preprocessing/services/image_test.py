@@ -41,8 +41,22 @@ class ImageServiceTestCase(unittest.TestCase):
         pil_img = Image.open(image_filepath)
         self.assertTrue(im.guess_img_type(pil_img) == 'JPEG')
         self.assertFalse(im.is_png(pil_img))
+        km, flat_array = im.get_kmeans_img_model(pil_img)
+        print(im.get_color_palette(km))
+        print(im.get_accent_color(km, flat_array))
         im.create_thumbnail(pil_img, image_filepath)
         pil_img.close()
+
+    def test_create_variants(self):
+        im = image.ImageService(storage_service=storage_service,
+                                logger=logger)
+        img = "https://images.unsplash.com/photo-1682685797828-d3b2561deef4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&q=80%22"
+        img_name = "test_create_variants"
+        im.save_remote_image(img, img_name)
+        image_filepath = storage_service.get_image_dir_path() + img_name
+        pil_img = Image.open(image_filepath)
+        im.create_variants(pil_img, image_filepath)
+        self.assertTrue(True, True)
 
 
 if __name__ == '__main__':
