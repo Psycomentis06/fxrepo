@@ -6,6 +6,8 @@ import os
 
 from services.cache import Cache
 from services.storage import Storage
+from services.nsfw import NsfwDetector
+from services.image import ImageService
 
 
 def create_kafka_consumer(servers, group_id, auto_offset_reset) -> Consumer:
@@ -83,6 +85,18 @@ def create_container():
             Cache,
             scope="images",
             storage_service=storage_service
+        )
+
+        nsfw_detector_service = providers.Factory(
+            NsfwDetector,
+            model_name="nsfw.299x299.h5"
+        )
+
+        image_service = providers.Factory(
+            ImageService,
+            logger_service,
+            storage_service,
+            nsfw_detector_service
         )
 
     return Container()
