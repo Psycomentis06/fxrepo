@@ -40,8 +40,8 @@ func main() {
 		imageGrp := apiV1Grp.Group("/image")
 		{
 			imageGrp.GET(":fileId", controllers.GetImage)
-			imageGrp.POST("", controllers.UploadImg)
-			imageGrp.DELETE(":fileId", controllers.RemoveImg)
+			imageGrp.POST("", middlewares.AuthorizationMiddleware(), controllers.UploadImg)
+			imageGrp.DELETE(":fileId", middlewares.AuthorizationMiddleware(), controllers.RemoveImg)
 		}
 	}
 
