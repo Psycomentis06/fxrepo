@@ -57,7 +57,8 @@ class ImageServiceTestCase(unittest.TestCase):
         im.save_remote_image(img, img_name)
         image_filepath = storage_service.get_image_dir_path() + img_name
         pil_img = Image.open(image_filepath)
-        im.create_variants(pil_img, image_filepath)
+        variants_data = im.create_variants(pil_img, image_filepath)
+        print(variants_data)
         self.assertTrue(True, True)
 
     def test_is_nsfw(self):
