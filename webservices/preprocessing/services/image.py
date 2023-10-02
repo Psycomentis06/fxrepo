@@ -135,7 +135,7 @@ class ImageService:
         return None
 
     def create_variants(self, img: Image.Image, filepath: str):
-        variants = [
+        variants_def = [
             {
                 "name": "small",
                 "width": 640,
@@ -148,8 +148,16 @@ class ImageService:
                 "name": "large",
                 "width": 2400,
             },
+            {
+                "name": "extra large",
+                "width": 3840,
+            }
         ]
-        for var in variants:
+        variants = []
+        for var in variants_def:
             target_width = var["width"]
             if img.size[0] > target_width * 1.2:
-                self.create_variant(img, target_width, filepath, var["name"])
+                variant_data = self.create_variant(img, target_width, filepath, var["name"])
+                if variant_data is not None:
+                    variants.append(variant_data)
+        return variants
