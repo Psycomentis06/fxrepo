@@ -111,6 +111,11 @@ services:
       - KAFKA_GROUP_ID=main_service
       - KAFKA_AUTO_OFFSET_RESET=earliest
       - STORAGE_ROOT_DIR=${HOME}/fx-repo-storage/preprocessing-service
+      - FX_STORAGE_USER=user
+      - FX_STORAGE_PASS=user
+      - FX_STORAGE_HOST=fx-storage
+      - FX_STORAGE_PORT=8080
+      - FX_STORAGE_SSL=false
     volumes:
       - "./preprocessing:/usr/src/app"
       - "${HOME}/fx-repo-storage/preprocessing-service/${HOME}/fx-repo-storage/preprocessing-service"

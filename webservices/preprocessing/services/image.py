@@ -4,16 +4,16 @@ import os.path
 import numpy as np
 from sklearn.cluster import KMeans
 from .types import kafka_image
-from nsfw import NsfwDetector
+from .nsfw import NsfwDetector
 import pathlib
 import urllib.request
 from PIL import Image
-import storage
+from .storage import Storage, FileType
 import logging
 
 
 class ImageService:
-    def __init__(self, logger: logging.Logger, storage_service: storage.Storage, nsfw_service: NsfwDetector):
+    def __init__(self, logger: logging.Logger, storage_service: Storage, nsfw_service: NsfwDetector):
         self.logger = logger
         self.storage_service = storage_service
         self.nsfw_detector = nsfw_service
@@ -46,7 +46,7 @@ class ImageService:
         image_content = bytes()
         with urllib.request.urlopen(url) as response:
             image_content = response.read()
-        self.storage_service.store(image_name, image_content, storage.FileType.IMAGE)
+        self.storage_service.store(image_name, image_content, FileType.IMAGE)
 
     def get_image(self, url):
         pass

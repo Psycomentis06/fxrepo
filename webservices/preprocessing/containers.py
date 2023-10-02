@@ -5,6 +5,7 @@ import logging
 import os
 
 from services.cache import Cache
+from services.fx_storage import FxStorage
 from services.storage import Storage
 from services.nsfw import NsfwDetector
 from services.image import ImageService
@@ -97,6 +98,15 @@ def create_container():
             logger_service,
             storage_service,
             nsfw_detector_service
+        )
+
+        fx_storage = providers.Factory(
+            FxStorage,
+            host=config.fx_storage.host,
+            port=config.fx_storage.port,
+            ssl=config.fx_storage.ssl,
+            username=config.fx_storage.username,
+            password=config.fx_storage.password,
         )
 
     return Container()

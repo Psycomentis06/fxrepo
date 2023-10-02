@@ -17,3 +17,9 @@ celery:
   backend: ${CELERY_RESULT_BACKEND:redis://redis:6379/0}
 storage:
   root_dir: ${STORAGE_ROOT_DIR:/tmp/fx-repo/preprocessing-service}
+fx_storage:
+  username: ${FX_STORAGE_USER:user}
+  password: ${FX_STORAGE_PASS:user}
+  host: ${FX_STORAGE_HOST:localhost}
+  port: ${FX_STORAGE_PORT:9055}
+  ssl: ${FX_STORAGE_SSL:false}
