@@ -1,3 +1,4 @@
+import json
 import sys
 from confluent_kafka import KafkaException
 from containers import root_container
@@ -9,16 +10,31 @@ logger = root_container.logger_service()
 
 
 def image_topic_handler(msg: str):
-    image_data = decode(msg, KafkaData[ImagePostData])
-    logger.info("Received image data from event: {}".format(image_data['eventId']))
-    logger.info("Received image data: {}".format(image_data['payload']))
+    try:
+        image_data = decode(msg, KafkaData[ImagePostData])
+        logger.info("Received image data from event: {}".format(image_data['eventId']))
+        logger.info("Received image data: {}".format(image_data['payload']))
+    except json.JSONDecodeError:
+        logger.error("Failed to decode image data: {}".format(msg))
+
+
+def on_assign(consumer, part):
+    print("Assigned to: {}".format(list(map(lambda x: x.value(), consumer.assignment()))))
+
+
+def on_revoke(consumer, part):
+    print("Revoked")
+
+
+def on_lost(consumer, part):
+    print("Lost")
 
 
 def consume_image_kafka_topic():
     consumer = root_container.kafka_consumer_service()
     try:
         topics = [KafkaTopics.IMAGE]
-        consumer.subscribe(topics)
+        consumer.subscribe(topics, on_assign=on_assign, on_revoke=on_revoke, on_lost=on_lost)
         logger.info("Listening for topics: {}".format(topics))
         while True:
             msg = consumer.poll(timeout=1.0)
