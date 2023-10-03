@@ -23,3 +23,9 @@ fx_storage:
   host: ${FX_STORAGE_INNER_HOST:localhost}
   port: ${FX_STORAGE_PORT:9055}
   ssl: ${FX_STORAGE_SSL:false}
+ferret_db:
+  host: ${FERRET_HOST:localhost}
+  port: ${FERRET_PORT:27017}
+  db_name: ${$FERRET_DB:ferret_db}
+  username: ${FERRET_USER:ferret_db}
+  password: ${FERRET_PASS:ferret_db}

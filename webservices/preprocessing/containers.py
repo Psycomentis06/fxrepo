@@ -1,4 +1,5 @@
 from dependency_injector import containers, providers
+from pymongo import MongoClient
 from redis import Redis
 from confluent_kafka import Consumer, Producer
 import logging
@@ -38,6 +39,11 @@ def create_logger():
     console_handler.setFormatter(formatter)
     logger.addHandler(console_handler)
     return logger
+
+
+def create_mongo_db_client(host, port, username, password, db):
+    uri = f"mongodb://{username}:{password}@{host}/{db}?authMechanism=PLAIN"
+    return MongoClient(uri)
 
 
 def create_container():
@@ -107,6 +113,15 @@ def create_container():
             ssl=config.fx_storage.ssl,
             username=config.fx_storage.username,
             password=config.fx_storage.password,
+        )
+
+        mongo_client = providers.Factory(
+            create_mongo_db_client,
+            host=config.ferret_db.host,
+            port=config.ferret_db.port,
+            username=config.ferret_db.username,
+            password=config.ferret_db.password,
+            db=config.ferret_db.db_name,
         )
 
     return Container()

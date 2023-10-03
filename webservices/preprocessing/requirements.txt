@@ -10,3 +10,4 @@ numpy~=1.24.0
 nsfw-detector~=1.1.1
 tensorflow==2.12.1
 protobuf==3.20.3
+pymongo~=4.5.0

@@ -121,6 +121,11 @@ services:
       - FX_STORAGE_OUTER_HOST=localhost # Used to create the public service url that can be used to get the files
       - FX_STORAGE_PORT=8080
       - FX_STORAGE_SSL=false
+      - FERRET_USER=ferret_db
+      - FERRET_PASS=ferret_db
+      - FERRET_DB=ferret_db
+      - FERRET_HOST=fx-ferret-db
+      - FERRET_PORT=27017
     volumes:
       - "./preprocessing:/usr/src/app"
       - "${HOME}/fx-repo-storage/preprocessing-service/${HOME}/fx-repo-storage/preprocessing-service"
@@ -130,6 +135,7 @@ services:
       - kafka-network
       - redis-network
       - preprocessing-storage-network
+      - ferret-preprocessing-network
     depends_on:
       - fx-redis
       - fx-storage
@@ -166,15 +172,33 @@ services:
       - fx-redis
       - fx-typesense
   fx-postgresql:
-    image: postgres:15-bookworm
+    build:
+      context: "./postgres"
+      dockerfile: "Dockerfile"
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=fx_repo_main
+      - FERRET_USER=ferret_db
+      - FERRET_PASS=ferret_db
+      - FERRET_DB=ferret_db
     ports:
       - "5432:5432"
     networks:
       - postgresql-network
       - keycloak-network
+      - ferret-postgres-network
+  fx-ferret-db:
+    image: ghcr.io/ferretdb/ferretdb
+    restart: on-failure
+    ports:
+      - "27017:27017"
+    environment:
+      - FERRETDB_POSTGRESQL_URL=postgres://fx-postgresql:5432/ferret_db
+    networks:
+      - ferret-postgres-network
+      - ferret-preprocessing-network
+    depends_on:
+      - fx-postgresql
   #  fx-keycloak:
   #    build:
   #      context: "keycloak"
@@ -223,3 +247,5 @@ networks:
   main-service-network:
   keycloak-network:
   typesense-network:
+  ferret-postgres-network:
+  ferret-preprocessing-network:
