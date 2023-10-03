@@ -24,6 +24,8 @@ services:
       - preprocessing-storage-network
     volumes:
       - "./storage:/usr/src/app"
+    depends_on:
+      - fx-minio
   fx-minio:
     image: minio/minio
     container_name: fx-minio-container
@@ -128,6 +130,10 @@ services:
       - kafka-network
       - redis-network
       - preprocessing-storage-network
+    depends_on:
+      - fx-redis
+      - fx-storage
+      - fx-kafka
   fx-main-service:
     build:
       context: "./fx-repo-main"
@@ -154,6 +160,11 @@ services:
       - kafka-network
       - keycloak-network
       - typesense-network
+    depends_on:
+      - fx-kafka
+      - fx-postgresql
+      - fx-redis
+      - fx-typesense
   fx-postgresql:
     image: postgres:15-bookworm
     environment:
