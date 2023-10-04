@@ -43,6 +43,15 @@ class ImageService:
             return None
 
     def save_remote_image(self, url: str, image_name: str):
+        main_service_host = os.getenv('MAIN_SERVICE_HOST')
+        if main_service_host is None:
+            self.logger.warning("MAIN_SERVICE_HOST environment variable is not set.")
+        main_service_name = os.getenv('MAIN_SERVICE_NAME')
+        if main_service_name is None:
+            self.logger.warning("MAIN_SERVICE_NAME environment variable is not set")
+        if main_service_host is not None and main_service_name is not None and main_service_host in url:
+            url = url.replace(main_service_host, main_service_name)
+
         image_content = bytes()
         with urllib.request.urlopen(url) as response:
             image_content = response.read()
