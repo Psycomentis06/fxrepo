@@ -112,7 +112,7 @@ services:
       - REDIS_HOST=fx-redis
       - REDIS_PORT=6379
       - KAFKA_HOST=fx-kafka
-      - KAFKA_GROUP_ID=main_service
+      - KAFKA_GROUP_ID=preprocessing_service
       - KAFKA_AUTO_OFFSET_RESET=earliest
       - STORAGE_ROOT_DIR=${HOME}/fx-repo-storage/preprocessing-service
       - FX_STORAGE_USER=user
@@ -126,6 +126,8 @@ services:
       - FERRET_DB=ferret_db
       - FERRET_HOST=fx-ferret-db
       - FERRET_PORT=27017
+      - MAIN_SERVICE_HOST=localhost:9057 # If the image url contains this domain it will request using the docker network dns
+      - MAIN_SERVICE_NAME=fx-main-service:8000
     volumes:
       - "./preprocessing:/usr/src/app"
       - "${HOME}/fx-repo-storage/preprocessing-service/${HOME}/fx-repo-storage/preprocessing-service"
@@ -140,6 +142,7 @@ services:
       - fx-redis
       - fx-storage
       - fx-kafka
+      - fx-ferret-db
   fx-main-service:
     build:
       context: "./fx-repo-main"
