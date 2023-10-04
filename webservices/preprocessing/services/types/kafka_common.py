@@ -7,22 +7,22 @@ T = TypeVar('T')
 
 
 class Actions(Enum):
-    ADD = 'Add'
-    REMOVE = 'Remove'
-    UPDATE = 'Update'
+    ADD = 'ADD'
+    REMOVE = 'REMOVE'
+    UPDATE = 'UPDATE'
 
 
 class Targets(Enum):
-    PRE_PROCESSING = 'Pre-Processing'
-    STORAGE = 'Storage'
-    MAIN = 'Main'
+    PRE_PROCESSING = 'PRE_PROCESSING'
+    STORAGE = 'STORAGE'
+    MAIN = 'MAIN'
 
 
 class Status(Enum):
-    DONE = 'Done'
-    CANCELED = 'Canceled'
-    FAILED = 'Failed'
-    IN_PROGRESS = 'In-progress'
+    DONE = 'DONE'
+    CANCELED = 'CANCELED'
+    FAILED = 'FAILED'
+    IN_PROGRESS = 'IN_PROGRESS'
 
 
 @dataclass
@@ -30,6 +30,6 @@ class KafkaData(TypedDict, Generic[T]):
     eventId: str
     eventTime: datetime.datetime
     action: Actions
-    target: List[Targets]
+    targets: List[Targets]
     status: Status
     payload: T
