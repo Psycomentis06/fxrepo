@@ -131,8 +131,6 @@ services:
     volumes:
       - "./preprocessing:/usr/src/app"
       - "${HOME}/fx-repo-storage/preprocessing-service/${HOME}/fx-repo-storage/preprocessing-service"
-    ports:
-      - "9056:5000"
     networks:
       - kafka-network
       - redis-network
@@ -143,6 +141,22 @@ services:
       - fx-storage
       - fx-kafka
       - fx-ferret-db
+  fx-nsfw-detector-service:
+    build:
+      context: "./nsfw_detector"
+      dockerfile: Dockerfile
+    ports:
+      - ":8000"
+    environment:
+      - STORAGE_IMAGE_DIR=${HOME}/fx-repo-storage/preprocessing-service/image
+    volumes:
+      - "./nsfw_detector:/usr/src/app"
+      - "${HOME}/fx-repo-storage/preprocessing-service:${HOME}/fx-repo-storage/preprocessing-service"
+    networks:
+      - nsfw-detector-preprocessing-network
+    depends_on:
+      - fx-preprocessing
+
   fx-main-service:
     build:
       context: "./fx-repo-main"
@@ -252,3 +266,4 @@ networks:
   typesense-network:
   ferret-postgres-network:
   ferret-preprocessing-network:
+  nsfw-detector-preprocessing-network:
