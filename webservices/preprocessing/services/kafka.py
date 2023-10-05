@@ -2,7 +2,7 @@ import json
 from typing import TypeVar, Type
 from enum import StrEnum
 
-from .types.kafka_common import KafkaData
+from ._types.kafka_common import KafkaData
 
 T = TypeVar('T')
 

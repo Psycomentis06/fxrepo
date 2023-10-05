@@ -1,8 +1,8 @@
 import datetime
 import unittest
 
-from .types.kafka_common import KafkaData
-from .types.kafka_image import ImageData
+from ._types.kafka_common import KafkaData
+from ._types.kafka_image import ImageData
 from .kafka import encode, decode
 
 

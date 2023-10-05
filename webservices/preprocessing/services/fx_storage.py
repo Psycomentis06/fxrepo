@@ -4,8 +4,6 @@ import urllib.error
 from urllib import request, error
 from typing import TypedDict
 
-import requests
-
 
 class FxStorageFileInfo(TypedDict):
     Bucket: str

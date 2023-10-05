@@ -3,8 +3,7 @@ import hashlib
 import os.path
 import numpy as np
 from sklearn.cluster import KMeans
-from .types import kafka_image
-from .nsfw import NsfwDetector
+from ._types import kafka_image
 import pathlib
 import urllib.request
 from PIL import Image
@@ -13,10 +12,9 @@ import logging
 
 
 class ImageService:
-    def __init__(self, logger: logging.Logger, storage_service: Storage, nsfw_service: NsfwDetector):
+    def __init__(self, logger: logging.Logger, storage_service: Storage):
         self.logger = logger
         self.storage_service = storage_service
-        self.nsfw_detector = nsfw_service
 
     def is_png(self, img: Image.Image) -> bool:
         return self.guess_img_type(img) == "PNG"
@@ -81,25 +79,7 @@ class ImageService:
         return [km, img_array_flat]
 
     def is_nsfw(self, img_path: str):
-        prediction_res = self.nsfw_detector.predict(img_path)
-        sexy = prediction_res[img_path]["sexy"]
-        hentai = prediction_res[img_path]["hentai"]
-        porn = prediction_res[img_path]["porn"]
-        drawings = prediction_res[img_path]["drawings"]
-        neutral = prediction_res[img_path]["neutral"]
-
-        total = sexy + hentai + porn + drawings + neutral
-        sexy_norm = sexy / total
-        hentai_norm = hentai / total
-        porn_norm = porn / total
-
-        weight_sexy = 1
-        weight_hentai = 1.5
-        weight_porn = 2
-        weighted_average = (porn_norm * weight_porn) + (sexy_norm * weight_sexy) + (hentai_norm * weight_hentai)
-        threshold = 0.8
-        print(weighted_average)
-        return weighted_average >= threshold
+        pass
 
     def reformat_img(self, img: Image.Image, filepath: str):
         img.save(filepath, "PNG")
