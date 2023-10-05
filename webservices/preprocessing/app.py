@@ -5,8 +5,8 @@ import sys
 from confluent_kafka import KafkaException
 from containers import root_container
 from services.kafka import KafkaTopics, decode
-from services.types.kafka_image import ImagePostData
-from services.types.kafka_common import KafkaData, Targets, Actions
+from services._types.kafka_image import ImagePostData
+from services._types.kafka_common import KafkaData, Targets, Actions
 from PIL import Image as PilImage
 
 image_service = root_container.image_service()
@@ -14,7 +14,7 @@ storage_service = root_container.storage_service()
 logger = root_container.logger_service()
 mongo_client = root_container.mongo_client()
 SERVICE_COLLECTION_NAME = "fx_preprocessing_service_collection"
-db = mongo_client[SERVICE_COLLECTION_NAME].get_collection()
+db = mongo_client[SERVICE_COLLECTION_NAME]
 
 
 def process_image(img_data: ImagePostData):

@@ -44,7 +44,7 @@ def is_nsfw(img_path: str):
 
 if __name__ == "__main__":
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.bind(("127.0.0.1", port))
+    s.bind(("0.0.0.0", port))
     s.listen(5)
     print(f"Listening on port {port}")
     sockets_list = [s]
@@ -67,5 +67,6 @@ if __name__ == "__main__":
                     notified_socket.close()
 
         for notified_socket in error_sockets:
+            print("Err socket remove")
             sockets_list.remove(notified_socket)
             notified_socket.close()

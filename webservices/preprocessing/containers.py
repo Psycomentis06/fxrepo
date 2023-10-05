@@ -8,7 +8,6 @@ import os
 from services.cache import Cache
 from services.fx_storage import FxStorage
 from services.storage import Storage
-from services.nsfw import NsfwDetector
 from services.image import ImageService
 
 
@@ -94,16 +93,10 @@ def create_container():
             storage_service=storage_service
         )
 
-        nsfw_detector_service = providers.Factory(
-            NsfwDetector,
-            model_name="nsfw.299x299.h5"
-        )
-
         image_service = providers.Factory(
             ImageService,
             logger_service,
             storage_service,
-            nsfw_detector_service
         )
 
         fx_storage = providers.Factory(
