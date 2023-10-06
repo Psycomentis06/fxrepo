@@ -132,17 +132,20 @@ services:
       - FX_NSFW_DETECTOR_PORT=8000
     volumes:
       - "./preprocessing:/usr/src/app"
-      - "${HOME}/fx-repo-storage/preprocessing-service/${HOME}/fx-repo-storage/preprocessing-service"
+      - "${HOME}/fx-repo-storage/preprocessing-service:${HOME}/fx-repo-storage/preprocessing-service"
+
     networks:
       - kafka-network
       - redis-network
       - preprocessing-storage-network
       - ferret-preprocessing-network
+      - nsfw-detector-preprocessing-network
     depends_on:
       - fx-redis
       - fx-storage
       - fx-kafka
       - fx-ferret-db
+      - fx-nsfw-detector-service
   fx-nsfw-detector-service:
     build:
       context: "./nsfw_detector"
@@ -156,8 +159,6 @@ services:
       - "${HOME}/fx-repo-storage/preprocessing-service:${HOME}/fx-repo-storage/preprocessing-service"
     networks:
       - nsfw-detector-preprocessing-network
-    depends_on:
-      - fx-preprocessing
 
   fx-main-service:
     build:
