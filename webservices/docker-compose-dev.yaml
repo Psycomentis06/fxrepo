@@ -128,6 +128,8 @@ services:
       - FERRET_PORT=27017
       - MAIN_SERVICE_HOST=localhost:9057 # If the image url contains this domain it will request using the docker network dns
       - MAIN_SERVICE_NAME=fx-main-service:8000
+      - FX_NSFW_DETECTOR_HOST=fx-nsfw-detector-service
+      - FX_NSFW_DETECTOR_PORT=8000
     volumes:
       - "./preprocessing:/usr/src/app"
       - "${HOME}/fx-repo-storage/preprocessing-service/${HOME}/fx-repo-storage/preprocessing-service"

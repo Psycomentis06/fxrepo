@@ -9,6 +9,7 @@ from services.cache import Cache
 from services.fx_storage import FxStorage
 from services.storage import Storage
 from services.image import ImageService
+from services.fx_nsfw_detector_service import FxNsfwDetectorService
 
 
 def create_kafka_consumer(servers, group_id, auto_offset_reset) -> Consumer:
@@ -93,10 +94,18 @@ def create_container():
             storage_service=storage_service
         )
 
+        fx_nsfw_detector = providers.Factory(
+            FxNsfwDetectorService,
+            host=config.fx_nsfw_detector.host,
+            port=config.fx_nsfw_detector.port
+        )
+
         image_service = providers.Factory(
             ImageService,
-            logger_service,
-            storage_service,
+            logger=logger_service,
+            storage_service=storage_service,
+            fx_nsfw=fx_nsfw_detector
+
         )
 
         fx_storage = providers.Factory(

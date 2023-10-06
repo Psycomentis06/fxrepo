@@ -29,3 +29,6 @@ ferret_db:
   db_name: ${$FERRET_DB:ferret_db}
   username: ${FERRET_USER:ferret_db}
   password: ${FERRET_PASS:ferret_db}
+fx_nsfw_detector:
+  host: ${FX_NSFW_DETECTOR_HOST:localhost}
+  port: ${FX_NSFW_DETECTOR_PORT:8000}

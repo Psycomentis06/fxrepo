@@ -7,14 +7,17 @@ from ._types import kafka_image
 import pathlib
 import urllib.request
 from PIL import Image
+
+from .fx_nsfw_detector_service import FxNsfwDetectorService
 from .storage import Storage, FileType
 import logging
 
 
 class ImageService:
-    def __init__(self, logger: logging.Logger, storage_service: Storage):
+    def __init__(self, logger: logging.Logger, storage_service: Storage, fx_nsfw: FxNsfwDetectorService):
         self.logger = logger
         self.storage_service = storage_service
+        self.fx_nsfw_service = fx_nsfw
 
     def is_png(self, img: Image.Image) -> bool:
         return self.guess_img_type(img) == "PNG"
@@ -79,7 +82,8 @@ class ImageService:
         return [km, img_array_flat]
 
     def is_nsfw(self, img_path: str):
-        pass
+        res = self.fx_nsfw_service.send_msg(img_path)
+        print(res)
 
     def reformat_img(self, img: Image.Image, filepath: str):
         img.save(filepath, "PNG")
