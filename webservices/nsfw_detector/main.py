@@ -60,7 +60,9 @@ if __name__ == "__main__":
                 message = notified_socket.recv(1024)
                 if message:
                     print(f"Received message: {message}")
-                    notified_socket.send(b'Thank you for connecting')
+                    is_nsfw_res = is_nsfw(message)
+                    is_nsfw_res = bytes(str(is_nsfw_res), "utf-8")
+                    notified_socket.send(is_nsfw_res)
                 else:
                     print("Client closed connection")
                     sockets_list.remove(notified_socket)
