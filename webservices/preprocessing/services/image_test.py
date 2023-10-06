@@ -4,13 +4,11 @@ import urllib.error
 
 from PIL import Image
 
-from services import image
 from containers import root_container
 
 os.environ["PROTOCOL_BUFFERS_PYTHON_IMPLEMENTATION"] = "python"
 logger = root_container.logger_service()
 storage_service = root_container.storage_service()
-nsfw_service = root_container.nsfw_detector_service()
 image_service = root_container.image_service()
 
 
