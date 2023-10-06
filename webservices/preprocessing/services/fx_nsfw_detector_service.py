@@ -11,5 +11,9 @@ class FxNsfwDetectorService:
         s.connect((self.host, self.port))
         s.send(bytes(msg, 'utf-8'))
         msg = s.recv(1024)
+        msg = str(msg, 'utf-8')
+        is_nsfw = False
+        if msg.upper() == "TRUE":
+            is_nsfw = True
         s.close()
-        return msg
+        return is_nsfw

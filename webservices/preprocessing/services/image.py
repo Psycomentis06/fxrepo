@@ -83,7 +83,7 @@ class ImageService:
 
     def is_nsfw(self, img_path: str):
         res = self.fx_nsfw_service.send_msg(img_path)
-        print(res)
+        return res
 
     def reformat_img(self, img: Image.Image, filepath: str):
         img.save(filepath, "PNG")
