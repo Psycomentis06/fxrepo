@@ -13,15 +13,16 @@ image_service = root_container.image_service()
 storage_service = root_container.storage_service()
 logger = root_container.logger_service()
 mongo_client = root_container.mongo_client()
+fx_storage = root_container.fx_storage()
 SERVICE_COLLECTION_NAME = "fx_preprocessing_service_collection"
-db = mongo_client[SERVICE_COLLECTION_NAME]
+db = mongo_client.get_default_database().get_collection(SERVICE_COLLECTION_NAME)
 
 
 def process_image(img_data: ImagePostData):
     image_object = img_data['image']
     image_original_variant = image_object['variants'][0]
-    image_name = str(image_original_variant['id'])
-    image_service.save_remote_image(image_original_variant['url'], image_name)
+    image_name = image_object['id']
+    image_original_variant['url'] = image_service.save_remote_image(image_original_variant['url'], image_name)
     image_file_path = storage_service.get_image_dir_path() + image_name
     pil_image = PilImage.open(image_file_path)
     image_original_variant['width'] = pil_image.width
@@ -32,10 +33,13 @@ def process_image(img_data: ImagePostData):
         image_original_variant['md5'] = hashlib.md5(image_data).hexdigest()
         image_original_variant['sha256'] = hashlib.sha256(image_data).hexdigest()
 
-    thumb_state = image_service.create_thumbnail(pil_image, image_name)
-    if thumb_state is True:
-        # save Image to storage service
-        pass
+    thumb_path = image_service.create_thumbnail(pil_image, image_name)
+    if thumb_path is not None:
+        with open(thumb_path, 'rb') as thumb_file:
+            thumb_info = fx_storage.add_image(thumb_file.read())
+            if thumb_info is not None:
+                img_data['thumbnail'] = fx_storage.endpoint + fx_storage.GET_IMAGE_ENDPOINT.format(
+                    thumb_info['info']['Key'])
     if not image_service.is_png(pil_image):
         image_service.reformat_img(pil_image, image_file_path)
 
@@ -47,8 +51,13 @@ def process_image(img_data: ImagePostData):
 
     variants_data = image_service.create_variants(pil_image, image_file_path)
     image_object['variants'] = image_object['variants'] + variants_data
+    for image in image_object['variants']:
+        with open(image['url'], "rb") as file:
+            file_info = fx_storage.add_image(file.read())
+            if file_info is not None:
+                image['url'] = fx_storage.endpoint + fx_storage.GET_IMAGE_ENDPOINT.format(file_info['info']['Key'])
 
-    return image_object
+    return img_data
 
 
 def image_topic_handler(msg: str):
@@ -65,8 +74,10 @@ def image_topic_handler(msg: str):
                 if kafka_data['action'] == Actions.ADD.value:
                     logger.info("Adding image to preprocessing queue")
                     kafka_data['payload'] = process_image(kafka_data['payload'])
+                    print(kafka_data['payload'])
                     db_obj = kafka_data
                     db_obj['_id'] = kafka_data['eventId']
+                    db_obj['processing_status'] = "SUCCESS"
                     db.insert_one(db_obj)
                 else:
                     logger.info("Skipping event, not targeted for preprocessing")
