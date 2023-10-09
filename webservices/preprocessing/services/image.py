@@ -25,17 +25,17 @@ class ImageService:
     def guess_img_type(self, img: Image.Image) -> str:
         return img.format
 
-    def create_thumbnail(self, img: Image.Image, img_name: str) -> bool:
+    def create_thumbnail(self, img: Image.Image, img_name: str) -> str | None:
         n_img = copy.copy(img)
         n_img.thumbnail((54, 54))
-        filepath = self.storage_service.get_image_dir_path() + img_name
+        filepath = self.storage_service.get_image_dir_path() + img_name + "-thumb"
         try:
-            n_img.save(filepath + "-thumb", "PNG")
+            n_img.save(filepath, "PNG")
             self.logger.info("Thumbnail created: {}".format(filepath))
-            return True
+            return filepath
         except OSError:
             self.logger.error("Could not create thumbnail: {}".format(filepath))
-            return False
+            return None
 
     def get_local_img(self, name: str) -> bytes | None:
         try:
@@ -57,6 +57,7 @@ class ImageService:
         with urllib.request.urlopen(url) as response:
             image_content = response.read()
         self.storage_service.store(image_name, image_content, FileType.IMAGE)
+        return self.storage_service.get_image_dir_path() + image_name
 
     def get_image(self, url):
         pass
@@ -85,9 +86,10 @@ class ImageService:
         res = self.fx_nsfw_service.send_msg(img_path)
         return res
 
-    def reformat_img(self, img: Image.Image, filepath: str):
+    def reformat_img(self, img: Image.Image, filepath: str) -> str:
         img.save(filepath, "PNG")
         self.logger.info("Image {} reformatted: {} to {}".format(filepath, img.format, "PNG"))
+        return filepath
 
     def compress_img(self, img):
         pass
@@ -120,7 +122,7 @@ class ImageService:
                     "title": name,
                     "md5": hashlib.md5(new_img_var_data).hexdigest(),
                     "sha256": hashlib.sha256(new_img_var_data).hexdigest(),
-                    "url": ""
+                    "url": filepath
                 }
                 return data
         except OSError:

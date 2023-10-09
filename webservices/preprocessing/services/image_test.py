@@ -29,7 +29,7 @@ class ImageServiceTestCase(unittest.TestCase):
                 image_file_path = storage_service.get_image_dir_path() + image_name
                 pil_image = Image.open(image_file_path)
                 create_thumb = image_service.create_thumbnail(pil_image, image_name)
-                self.assertTrue(create_thumb)
+                self.assertIsNotNone(create_thumb)
             except urllib.error.HTTPError:
                 print("Failed to save image: {}".format(img))
 
