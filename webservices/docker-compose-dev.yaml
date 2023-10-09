@@ -146,6 +146,7 @@ services:
       - fx-kafka
       - fx-ferret-db
       - fx-nsfw-detector-service
+      - fx-main-service
   fx-nsfw-detector-service:
     build:
       context: "./nsfw_detector"
