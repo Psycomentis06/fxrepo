@@ -15,17 +15,16 @@ from PIL import Image as PilImage
 
 celery_app = root_container.celery_app()
 logger = root_container.logger_service()
-fx_storage_outer_host = os.getenv("FX_STORAGE_OUTER_HOST")
-if fx_storage_outer_host is None:
-    logger.error("FX_STORAGE_OUTER_HOST is not set")
-    exit(1)
-producer = root_container.kafka_producer_service()
 image_service = root_container.image_service()
 storage_service = root_container.storage_service()
 mongo_client = root_container.mongo_client()
 fx_storage = root_container.fx_storage()
 SERVICE_COLLECTION_NAME = "fx_preprocessing_service_collection"
 db = mongo_client.get_default_database().get_collection(SERVICE_COLLECTION_NAME)
+
+
+def get_kafka_producer():
+    return root_container.kafka_producer_service()
 
 
 @celery_app.task(name="fx_preprocessing_service.process_image", ignore_result=True)
@@ -48,6 +47,7 @@ def process_image_task(kafka_data: KafkaData[ImagePostData]):
         else:
             logger.info("Message {} produced to topic: {}".format(kafka_data['eventId'], msg.topic()))
 
+    producer = get_kafka_producer()
     producer.produce(KafkaTopics.IMAGE, encode(kafka_data), callback=producer_callback)
     producer.flush()
 
@@ -72,7 +72,7 @@ def process_image(img_data: ImagePostData):
         with open(thumb_path, 'rb') as thumb_file:
             thumb_info = fx_storage.add_image(thumb_file.read())
             if thumb_info is not None:
-                img_data['thumbnail'] = fx_storage_outer_host + fx_storage.GET_IMAGE_ENDPOINT.format(
+                img_data['thumbnail'] = fx_storage.outer_endpoint + fx_storage.GET_IMAGE_ENDPOINT.format(
                     thumb_info['info']['Key'])
     if not image_service.is_png(pil_image):
         image_service.reformat_img(pil_image, image_file_path)
@@ -85,11 +85,13 @@ def process_image(img_data: ImagePostData):
 
     variants_data = image_service.create_variants(pil_image, image_file_path)
     image_object['variants'] = image_object['variants'] + variants_data
+    print(image_object['variants'])
     for image in image_object['variants']:
         with open(image['url'], "rb") as file:
             file_info = fx_storage.add_image(file.read())
             if file_info is not None:
-                image['url'] = fx_storage_outer_host + fx_storage.GET_IMAGE_ENDPOINT.format(file_info['info']['Key'])
+                image['url'] = fx_storage.outer_endpoint + fx_storage.GET_IMAGE_ENDPOINT.format(
+                    file_info['info']['Key'])
 
     return img_data
 
