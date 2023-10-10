@@ -114,7 +114,9 @@ def create_container():
         fx_storage = providers.Factory(
             FxStorage,
             host=config.fx_storage.host,
+            outer_host=config.fx_storage.outer_host,
             port=config.fx_storage.port,
+            outer_port=config.fx_storage.outer_port,
             ssl=config.fx_storage.ssl,
             username=config.fx_storage.username,
             password=config.fx_storage.password,

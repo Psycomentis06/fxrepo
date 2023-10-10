@@ -121,6 +121,7 @@ services:
       - FX_STORAGE_INNER_HOST=fx-storage # Hostname in the Docker network
       - FX_STORAGE_OUTER_HOST=localhost # Used to create the public service url that can be used to get the files
       - FX_STORAGE_PORT=8080
+      - FX_STORAGE_OUTER_PORT=9055
       - FX_STORAGE_SSL=false
       - FERRET_USER=ferret_db
       - FERRET_PASS=ferret_db

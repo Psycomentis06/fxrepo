@@ -21,7 +21,9 @@ fx_storage:
   username: ${FX_STORAGE_USER:user}
   password: ${FX_STORAGE_PASS:user}
   host: ${FX_STORAGE_INNER_HOST:localhost}
+  outer_host: ${FX_STORAGE_OUTER_HOST:localhost}
   port: ${FX_STORAGE_PORT:9055}
+  outer_port: ${FX_STORAGE_OUTER_PORT:9055}
   ssl: ${FX_STORAGE_SSL:false}
 ferret_db:
   host: ${FERRET_HOST:localhost}

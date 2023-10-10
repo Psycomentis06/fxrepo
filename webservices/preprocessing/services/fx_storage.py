@@ -36,13 +36,16 @@ class FxStorage:
     GET_IMAGE_ENDPOINT = "/api/v1/image/{}"
     REMOVE_IMAGE_ENDPOINT = "/api/v1/image/{}"
 
-    def __init__(self, host: str, port: int, ssl: bool, username: str, password: str):
+    def __init__(self, host: str, outer_host: str, port: int, outer_port: int, ssl: bool, username: str, password: str):
+        self.outer_port = outer_port
+        self.outer_host = outer_host
         self.username = username
         self.password = password
         self.ssl = ssl
         self.port = port
         self.host = host
         self.endpoint = ("https://" if ssl else "http://") + host + ":" + str(port)
+        self.outer_endpoint = ("https://" if ssl else "http://") + outer_host + ":" + str(outer_port)
         self._check()
 
     def _check(self):
@@ -53,11 +56,11 @@ class FxStorage:
         url = self.host + ":" + str(self.port)
         conn = (http.client.HTTPSConnection(url) if self.ssl else http.client.HTTPConnection(url))
         boundary = "------WebKitFormBoundary7MA4YWxkTrZu0gW"
-        body = ("--%s\r\n"
-                "Content-Disposition: form-data; name=\"file\"; filename=\"image.png\"\r\n"
-                "Content-Type: image/png\r\n\r\n"
-                "%s\r\n"
-                "--%s--\r\n") % (boundary, image_data, boundary)
+        body = b"--%s\r\n" % boundary.encode() + \
+               b"Content-Disposition: form-data; name=\"file\"; filename=\"image.png\"\r\n" + \
+               b"Content-Type: image/png\r\n\r\n" + \
+               image_data + \
+               b"\r\n--%s--\r\n" % boundary.encode()
         headers = {
             "Content-Type": "multipart/form-data; boundary=%s" % boundary,
             "X-FX-STORAGE-USERNAME": self.username,
