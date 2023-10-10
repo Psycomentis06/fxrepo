@@ -10,6 +10,7 @@ class Actions(Enum):
     ADD = 'ADD'
     REMOVE = 'REMOVE'
     UPDATE = 'UPDATE'
+    PROCESSING = 'PROCESSING'
 
 
 class Targets(Enum):
@@ -28,7 +29,7 @@ class Status(Enum):
 @dataclass
 class KafkaData(TypedDict, Generic[T]):
     eventId: str
-    eventTime: datetime.datetime
+    eventTime: str
     action: Actions
     targets: List[Targets]
     status: Status
