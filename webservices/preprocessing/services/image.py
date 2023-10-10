@@ -124,7 +124,7 @@ class ImageService:
                     "title": name,
                     "md5": hashlib.md5(new_img_var_data).hexdigest(),
                     "sha256": hashlib.sha256(new_img_var_data).hexdigest(),
-                    "url": filepath
+                    "url": new_file_path
                 }
                 return data
         except OSError:
