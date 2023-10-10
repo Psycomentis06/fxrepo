@@ -1,3 +1,4 @@
+from celery import Celery
 from dependency_injector import containers, providers
 from pymongo import MongoClient
 from redis import Redis
@@ -32,6 +33,8 @@ def create_kafka_producer(servers, group_id, auto_offset_reset) -> Producer:
 
 def create_logger():
     logger = logging.getLogger("Pre-Processing-Service")
+    if logger.hasHandlers():
+        return logger
     logger.setLevel(logging.DEBUG)
     console_handler = logging.StreamHandler()
     console_handler.setLevel(logging.DEBUG)
@@ -124,6 +127,13 @@ def create_container():
             username=config.ferret_db.username,
             password=config.ferret_db.password,
             db=config.ferret_db.db_name,
+        )
+
+        celery_app = providers.Factory(
+            Celery,
+            main='fx-preprocessing',
+            broker=config.celery.broker,
+            backend=config.celery.backend,
         )
 
     return Container()

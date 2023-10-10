@@ -103,6 +103,7 @@ services:
       - "6379:6379"
     networks:
       redis-network:
+
   fx-preprocessing:
     build:
       context: "./preprocessing"
@@ -130,6 +131,8 @@ services:
       - MAIN_SERVICE_NAME=fx-main-service:8000
       - FX_NSFW_DETECTOR_HOST=fx-nsfw-detector-service
       - FX_NSFW_DETECTOR_PORT=8000
+      - CELERY_BROKER_URL=redis://fx-redis:6379
+      - CELERY_RESULT_BACKEND=redis://fx-redis:6379
     volumes:
       - "./preprocessing:/usr/src/app"
       - "${HOME}/fx-repo-storage/preprocessing-service:${HOME}/fx-repo-storage/preprocessing-service"
@@ -160,6 +163,11 @@ services:
       - "${HOME}/fx-repo-storage/preprocessing-service:${HOME}/fx-repo-storage/preprocessing-service"
     networks:
       - nsfw-detector-preprocessing-network
+
+  fx-preprocessing-celery-worker:
+    extends:
+      service: fx-preprocessing
+    command: celery -A app.celery_app worker -l info
 
   fx-main-service:
     build:

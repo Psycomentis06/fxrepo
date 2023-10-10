@@ -13,6 +13,7 @@ from services._types.kafka_image import ImagePostData
 from services._types.kafka_common import KafkaData, Targets, Actions, Status
 from PIL import Image as PilImage
 
+celery_app = root_container.celery_app()
 logger = root_container.logger_service()
 fx_storage_outer_host = os.getenv("FX_STORAGE_OUTER_HOST")
 if fx_storage_outer_host is None:
@@ -25,6 +26,30 @@ mongo_client = root_container.mongo_client()
 fx_storage = root_container.fx_storage()
 SERVICE_COLLECTION_NAME = "fx_preprocessing_service_collection"
 db = mongo_client.get_default_database().get_collection(SERVICE_COLLECTION_NAME)
+
+
+@celery_app.task(name="fx_preprocessing_service.process_image", ignore_result=True)
+def process_image_task(kafka_data: KafkaData[ImagePostData]):
+    kafka_data['payload'] = process_image(kafka_data['payload'])
+    db_obj = copy.copy(kafka_data)
+    db_obj['_id'] = kafka_data['eventId']
+    db_obj['processing_status'] = "SUCCESS"
+    db.insert_one(db_obj)
+    logger.info("Event {} is processed successfully".format(kafka_data['eventId']))
+    kafka_data['eventId'] = str(uuid.uuid4())
+    kafka_data['eventTime'] = datetime.now().isoformat()
+    kafka_data['action'] = Actions.PROCESSING.value
+    kafka_data['targets'] = [Targets.MAIN.value]
+    kafka_data['status'] = Status.DONE.value
+
+    def producer_callback(err, msg):
+        if err is not None:
+            logger.error(f"Error producing message: {err}")
+        else:
+            logger.info("Message {} produced to topic: {}".format(kafka_data['eventId'], msg.topic()))
+
+    producer.produce(KafkaTopics.IMAGE, encode(kafka_data), callback=producer_callback)
+    producer.flush()
 
 
 def process_image(img_data: ImagePostData):
@@ -82,25 +107,7 @@ def image_topic_handler(msg: str):
             case [Targets.PRE_PROCESSING.value]:
                 if kafka_data['action'] == Actions.ADD.value:
                     logger.info("Adding image to preprocessing queue")
-                    kafka_data['payload'] = process_image(kafka_data['payload'])
-                    db_obj = copy.copy(kafka_data)
-                    db_obj['_id'] = kafka_data['eventId']
-                    db_obj['processing_status'] = "SUCCESS"
-                    db.insert_one(db_obj)
-                    logger.info("Event {} is processed successfully".format(kafka_data['eventId']))
-                    kafka_data['eventId'] = str(uuid.uuid4())
-                    kafka_data['eventTime'] = datetime.now().isoformat()
-                    kafka_data['action'] = Actions.PROCESSING.value
-                    kafka_data['targets'] = [Targets.MAIN.value]
-                    kafka_data['status'] = Status.DONE.value
-
-                    def producer_callback(err, msg):
-                        if err is not None:
-                            logger.error(f"Error producing message: {err}")
-                        else:
-                            logger.info("Message {} produced to topic: {}".format(kafka_data['eventId'], msg.topic()))
-
-                    producer.produce(KafkaTopics.IMAGE, encode(kafka_data), callback=producer_callback)
+                    process_image_task.delay(kafka_data)
                 else:
                     logger.info("Skipping event, not targeted for preprocessing")
             case _:
