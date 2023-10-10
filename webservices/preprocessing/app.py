@@ -2,6 +2,7 @@ import copy
 import hashlib
 import json
 import os.path
+import pathlib
 import sys
 import uuid
 from datetime import datetime
@@ -74,6 +75,11 @@ def process_image(img_data: ImagePostData):
             if thumb_info is not None:
                 img_data['thumbnail'] = fx_storage.outer_endpoint + fx_storage.GET_IMAGE_ENDPOINT.format(
                     thumb_info['info']['Key'])
+        try:
+            pathlib.Path(thumb_path).unlink()
+            logger.info('Deleted thumbnail file: ' + thumb_path)
+        except OSError:
+            logger.error('Could not delete thumbnail file: ' + thumb_path)
     if not image_service.is_png(pil_image):
         image_service.reformat_img(pil_image, image_file_path)
 
@@ -85,13 +91,18 @@ def process_image(img_data: ImagePostData):
 
     variants_data = image_service.create_variants(pil_image, image_file_path)
     image_object['variants'] = image_object['variants'] + variants_data
-    print(image_object['variants'])
     for image in image_object['variants']:
-        with open(image['url'], "rb") as file:
+        image_path = image['url']
+        with open(image_path, "rb") as file:
             file_info = fx_storage.add_image(file.read())
             if file_info is not None:
                 image['url'] = fx_storage.outer_endpoint + fx_storage.GET_IMAGE_ENDPOINT.format(
                     file_info['info']['Key'])
+        try:
+            pathlib.Path(image_path).unlink()
+            logger.info('Deleted variant file: ' + image_path)
+        except OSError:
+            logger.error('Could not delete image file: ' + image_path)
 
     return img_data
 
