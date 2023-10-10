@@ -64,14 +64,16 @@ class ImageService:
 
     def get_color_palette(self, km):
         colors = km.cluster_centers_
-        return np.round(colors).astype(int)
+        palette_array = np.round(colors).astype(int).tolist()
+        return [{'r': color[0], 'g': color[1], 'b': color[2]} for color in palette_array]
 
     def get_accent_color(self, km, img_flat_array):
         labels = km.predict(img_flat_array)
         unique, counts = np.unique(labels, return_counts=True)
         dominant_label = unique[np.argmax(counts)]
         dominant_color = km.cluster_centers_[dominant_label]
-        return np.round(dominant_color).astype(int)
+        accent_array = np.round(dominant_color).astype(int).tolist()
+        return {'r': accent_array[0], 'g': accent_array[1], 'b': accent_array[2]}
 
     def get_kmeans_img_model(self, img: Image.Image):
         n_img = copy.copy(img)
