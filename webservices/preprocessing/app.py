@@ -1,17 +1,26 @@
+import copy
 import hashlib
 import json
 import os.path
 import sys
+import uuid
+from datetime import datetime
+
 from confluent_kafka import KafkaException
 from containers import root_container
-from services.kafka import KafkaTopics, decode
+from services.kafka import KafkaTopics, decode, encode
 from services._types.kafka_image import ImagePostData
-from services._types.kafka_common import KafkaData, Targets, Actions
+from services._types.kafka_common import KafkaData, Targets, Actions, Status
 from PIL import Image as PilImage
 
+logger = root_container.logger_service()
+fx_storage_outer_host = os.getenv("FX_STORAGE_OUTER_HOST")
+if fx_storage_outer_host is None:
+    logger.error("FX_STORAGE_OUTER_HOST is not set")
+    exit(1)
+producer = root_container.kafka_producer_service()
 image_service = root_container.image_service()
 storage_service = root_container.storage_service()
-logger = root_container.logger_service()
 mongo_client = root_container.mongo_client()
 fx_storage = root_container.fx_storage()
 SERVICE_COLLECTION_NAME = "fx_preprocessing_service_collection"
@@ -38,7 +47,7 @@ def process_image(img_data: ImagePostData):
         with open(thumb_path, 'rb') as thumb_file:
             thumb_info = fx_storage.add_image(thumb_file.read())
             if thumb_info is not None:
-                img_data['thumbnail'] = fx_storage.endpoint + fx_storage.GET_IMAGE_ENDPOINT.format(
+                img_data['thumbnail'] = fx_storage_outer_host + fx_storage.GET_IMAGE_ENDPOINT.format(
                     thumb_info['info']['Key'])
     if not image_service.is_png(pil_image):
         image_service.reformat_img(pil_image, image_file_path)
@@ -55,7 +64,7 @@ def process_image(img_data: ImagePostData):
         with open(image['url'], "rb") as file:
             file_info = fx_storage.add_image(file.read())
             if file_info is not None:
-                image['url'] = fx_storage.endpoint + fx_storage.GET_IMAGE_ENDPOINT.format(file_info['info']['Key'])
+                image['url'] = fx_storage_outer_host + fx_storage.GET_IMAGE_ENDPOINT.format(file_info['info']['Key'])
 
     return img_data
 
@@ -74,11 +83,24 @@ def image_topic_handler(msg: str):
                 if kafka_data['action'] == Actions.ADD.value:
                     logger.info("Adding image to preprocessing queue")
                     kafka_data['payload'] = process_image(kafka_data['payload'])
-                    print(kafka_data['payload'])
-                    db_obj = kafka_data
+                    db_obj = copy.copy(kafka_data)
                     db_obj['_id'] = kafka_data['eventId']
                     db_obj['processing_status'] = "SUCCESS"
                     db.insert_one(db_obj)
+                    logger.info("Event {} is processed successfully".format(kafka_data['eventId']))
+                    kafka_data['eventId'] = str(uuid.uuid4())
+                    kafka_data['eventTime'] = datetime.now().isoformat()
+                    kafka_data['action'] = Actions.PROCESSING.value
+                    kafka_data['targets'] = [Targets.MAIN.value]
+                    kafka_data['status'] = Status.DONE.value
+
+                    def producer_callback(err, msg):
+                        if err is not None:
+                            logger.error(f"Error producing message: {err}")
+                        else:
+                            logger.info("Message {} produced to topic: {}".format(kafka_data['eventId'], msg.topic()))
+
+                    producer.produce(KafkaTopics.IMAGE, encode(kafka_data), callback=producer_callback)
                 else:
                     logger.info("Skipping event, not targeted for preprocessing")
             case _:
