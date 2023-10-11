@@ -31,7 +31,7 @@ public class KafkaServiceImpl implements KafkaService {
         HashSet<Target> targets = new HashSet<>();
         KafkaEventModel<ImagePost> kf = new KafkaEventModel<>(
                 UUID.randomUUID().toString(),
-                LocalDateTime.now(),
+                LocalDateTime.now().toString(),
                 Action.ADD,
                 Status.DONE,
                 Collections.singleton(Target.PRE_PROCESSING),
