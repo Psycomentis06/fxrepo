@@ -1,8 +1,6 @@
 package com.github.psycomentis06.fxrepomain.model;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.github.psycomentis06.fxrepomain.entity.Category;
-import com.github.psycomentis06.fxrepomain.entity.Tag;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -19,6 +17,6 @@ public class ImagePostCreateModel {
     private boolean publik;
     private boolean nsfw;
     private Set<String> tags;
-    private int category;
+    private String category;
     private String image;
 }
