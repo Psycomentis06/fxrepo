@@ -62,7 +62,17 @@ public class ImagePostController {
                 }
         );
         imagePost.setTags(tags);
-        Category category = categoryRepository.findById(postData.getCategory()).orElseThrow(() -> new EntityNotFoundException("Category with id %s not found".formatted(postData.getCategory())));
+        Category category;
+        try {
+            int categoryId = Integer.parseInt(postData.getCategory());
+            category = categoryRepository
+                    .findById(categoryId)
+                    .orElseThrow(() -> new EntityNotFoundException("Category with id %s not found".formatted(postData.getCategory())));
+        } catch (NumberFormatException e) {
+            category = categoryRepository
+                    .findByNameIgnoreCase(postData.getCategory())
+                    .orElseThrow(() -> new EntityNotFoundException("Category with name %s not found".formatted(postData.getCategory())));
+        }
         imagePost.setCategory(category);
         imagePost.setTitle(postData.getTitle());
         imagePost.setContent(postData.getContent());

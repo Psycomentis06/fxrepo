@@ -2,7 +2,6 @@ package com.github.psycomentis06.fxrepomain.repository;
 
 import com.github.psycomentis06.fxrepomain.entity.Category;
 import com.github.psycomentis06.fxrepomain.entity.PostType;
-import com.github.psycomentis06.fxrepomain.projection.CategoryListProjection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
