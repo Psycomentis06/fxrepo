@@ -3,7 +3,8 @@ package com.github.psycomentis06.fxrepomain;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.github.psycomentis06.fxrepomain.entity.ImagePost;
+import com.github.psycomentis06.fxrepomain.dto.ImagePostDto;
+import com.github.psycomentis06.fxrepomain.entity.KafkaEvent;
 import com.github.psycomentis06.fxrepomain.model.kafka.Action;
 import com.github.psycomentis06.fxrepomain.model.kafka.KafkaEventModel;
 import com.github.psycomentis06.fxrepomain.model.kafka.Status;
@@ -22,6 +23,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaListener;
+
+import java.time.LocalDateTime;
 
 @Slf4j(topic = "Main")
 @SpringBootApplication
@@ -60,17 +63,17 @@ public class FxRepoMainApplication {
                                 && kafkaEvent.action().equals(Action.PROCESSING)) {
 //                            var imagePostType = objectMapper.getTypeFactory().constructParametricType(KafkaEventModel.class, ImagePost.class);
 //                            var kafkaImagePost = objectMapper.readValue(in.value(), imagePostType);
-                            var kafkaImagePost = objectMapper.convertValue(kafkaEvent.payload(), ImagePost.class);
-                            System.out.println(kafkaImagePost.getThumbnail());
-                            /*imagePostService.preprocessingUpdatePostImage(kafkaImagePost);
+                            var kafkaImagePost = objectMapper.convertValue(kafkaEvent.payload(), ImagePostDto.class);
+                            imagePostService.preprocessingUpdatePostImage(kafkaImagePost);
                             KafkaEvent k = new KafkaEvent();
                             k.setId(kafkaEvent.eventId());
                             k.setTime(LocalDateTime.parse(kafkaEvent.eventTime()));
                             k.setStatus(Status.DONE);
                             k.setMessage(in.value());
-                            kafkaEventRepository.save(k);*/
+                            kafkaEventRepository.save(k);
+                            log.info("Event: " + kafkaEvent.eventId() + " processed and updated ImagePost successfully");
                         } else {
-                            log.info("Not the target");
+                            log.info("Event: " + kafkaEvent.eventId() + " not targeted to main");
                         }
                     }
                 } catch (JsonProcessingException e) {
