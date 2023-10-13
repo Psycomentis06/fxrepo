@@ -1,9 +1,12 @@
 package com.github.psycomentis06.fxrepomain.service;
 
-import com.github.psycomentis06.fxrepomain.entity.ImagePost;
+import com.github.psycomentis06.fxrepomain.dto.ImagePostDto;
+import com.github.psycomentis06.fxrepomain.entity.FileServicePlacement;
+import com.github.psycomentis06.fxrepomain.entity.FileVariant;
 import com.github.psycomentis06.fxrepomain.entity.Tag;
 import com.github.psycomentis06.fxrepomain.repository.ImagePostRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -19,38 +22,49 @@ public class ImagePostServiceImpl implements ImagePostService {
         this.tagService = tagService;
     }
 
+    @Transactional
     @Override
-    public void preprocessingUpdatePostImage(ImagePost imagePost) {
+    public void preprocessingUpdatePostImage(ImagePostDto imagePostDto) {
         // get saved object
-        var savedPost = imagePostRepository.findById(imagePost.getId())
-                .orElseThrow(() -> new EntityNotFoundException("ImagePost with id %s not found".formatted(imagePost.getId())));
+        var savedPost = imagePostRepository.findById(imagePostDto.getId())
+                .orElseThrow(() -> new EntityNotFoundException("ImagePost with id %s not found".formatted(imagePostDto.getId())));
 
         // update post properties
-        savedPost.setNsfw(imagePost.isNsfw());
-        savedPost.setThumbnail(imagePost.getThumbnail());
+        savedPost.setNsfw(imagePostDto.isNsfw());
+        savedPost.setThumbnail(imagePostDto.getThumbnail());
         savedPost.setReady(true);
-        savedPost.setImage(imagePost.getImage());
-        /*
+//        savedPost.setImage(imagePost.getImage());
+
         // update image variants
         var savedImage = savedPost.getImage();
-        savedImage.setAccentColor(imagePost.getImage().getAccentColor());
-        savedImage.setColorPalette(imagePost.getImage().getColorPalette());
+        savedImage.setAccentColor(imagePostDto.getImage().getAccentColor());
+        savedImage.setColorPalette(imagePostDto.getImage().getColorPalette());
         savedImage.setPlacement(FileServicePlacement.STORAGE_SERVICE);
         var savedVariants = savedImage.getVariants();
-        imagePost.getImage().getVariants().forEach(variant -> {
-            var savedVariant = savedVariants.stream().filter(savedVariant1 -> savedVariant1.getTitle().equals(variant.getTitle())).findFirst().orElse(null);
+        imagePostDto.getImage().getVariants().forEach(variant -> {
+            var savedVariant = savedVariants
+                    .stream()
+                    .filter(savedVariant1 -> savedVariant1.getTitle().equals(variant.getTitle()))
+                    .findFirst()
+                    .orElse(null);
             if (savedVariant == null) {
-                savedVariants.add(variant);
+                var variant1 = new FileVariant();
+                variant1.setTitle(variant.getTitle());
+                variant1.setSize(variant.getSize());
+                variant1.setUrl(variant.getUrl());
+                variant1.setWidth(variant.getWidth());
+                variant1.setHeight(variant.getHeight());
+                variant1.setMd5(variant.getMd5());
+                variant1.setSha256(variant.getSha256());
+                variant1.setOriginal(variant.isOriginal());
+                savedVariants.add(variant1);
             } else {
-                savedVariant = variant;
                 savedVariants.add(savedVariant);
             }
         });
         // update tags
-        */
-
         Set<Tag> tags = new HashSet<>();
-        imagePost.getTags().forEach(t -> {
+        imagePostDto.getTags().forEach(t -> {
             var tag = tagService.getOrCreateTag(t.getName());
             tags.add(tag);
         });
