@@ -19,6 +19,7 @@ public class ImageFileDto extends FileDto {
         StringBuilder sb = new StringBuilder();
         sb.append("{");
         accentColor.forEach((k, v) -> sb.append("\"").append(k).append("\":\"").append(v).append("\","));
+        sb.deleteCharAt(sb.length() - 1);
         sb.append("}");
         return sb.toString();
     }
@@ -34,8 +35,9 @@ public class ImageFileDto extends FileDto {
         colorPalette.forEach(item -> {
             sb.append("{");
             item.forEach((k, v) -> sb.append("\"").append(k).append("\":\"").append(v).append("\","));
+            sb.deleteCharAt(sb.length() - 1);
             sb.append("}");
-            if (index.get() < colorPalette.size()) {
+            if (index.get() < colorPalette.size() - 1) {
                 sb.append(",");
             }
             index.getAndIncrement();
