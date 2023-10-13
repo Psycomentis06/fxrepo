@@ -11,10 +11,7 @@ import com.github.psycomentis06.fxrepomain.model.kafka.Status;
 import com.github.psycomentis06.fxrepomain.model.kafka.Target;
 import com.github.psycomentis06.fxrepomain.properties.StorageProperties;
 import com.github.psycomentis06.fxrepomain.repository.KafkaEventRepository;
-import com.github.psycomentis06.fxrepomain.service.ImagePostService;
-import com.github.psycomentis06.fxrepomain.service.KafkaService;
-import com.github.psycomentis06.fxrepomain.service.StorageService;
-import com.github.psycomentis06.fxrepomain.service.TypesenseService;
+import com.github.psycomentis06.fxrepomain.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.boot.CommandLineRunner;
@@ -35,10 +32,12 @@ public class FxRepoMainApplication {
 
     private KafkaEventRepository kafkaEventRepository;
     private ImagePostService imagePostService;
+    private StorageService storageService;
 
-    public FxRepoMainApplication(KafkaEventRepository kafkaEventRepository, ImagePostService imagePostService) {
+    public FxRepoMainApplication(KafkaEventRepository kafkaEventRepository, ImagePostService imagePostService, StorageService storageService) {
         this.kafkaEventRepository = kafkaEventRepository;
         this.imagePostService = imagePostService;
+        this.storageService = storageService;
     }
 
     public static void main(String[] args) {
@@ -65,6 +64,18 @@ public class FxRepoMainApplication {
 //                            var kafkaImagePost = objectMapper.readValue(in.value(), imagePostType);
                             var kafkaImagePost = objectMapper.convertValue(kafkaEvent.payload(), ImagePostDto.class);
                             imagePostService.preprocessingUpdatePostImage(kafkaImagePost);
+                            StorageServiceStatus status = storageService.delete(kafkaImagePost.getImage().getId());
+                            switch (status) {
+                                case FILE_NOT_FOUND -> {
+                                    log.info("File not found to be removed: {}", kafkaImagePost.getImage().getId());
+                                }
+                                case FILE_REMOVED -> {
+                                    log.info("File removed: {}", kafkaImagePost.getImage().getId());
+                                }
+                                case FILE_NOT_REMOVED -> {
+                                    log.info("File not removed: {}", kafkaImagePost.getImage().getId());
+                                }
+                            }
                             KafkaEvent k = new KafkaEvent();
                             k.setId(kafkaEvent.eventId());
                             k.setTime(LocalDateTime.parse(kafkaEvent.eventTime()));
