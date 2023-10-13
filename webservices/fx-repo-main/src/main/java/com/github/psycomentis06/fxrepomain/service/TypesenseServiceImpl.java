@@ -79,6 +79,22 @@ public class TypesenseServiceImpl implements TypesenseService {
     }
 
     public void addImagePostDocument(ImagePost imagePost) {
+        updateImagePostDocument(imagePost, true);
+    }
+
+    public void createImagePostDocument(Map<String, Object> doc) {
+        try {
+            log.info(objectMapper.writeValueAsString(doc));
+            typesenseClient.collections(IMAGE_POST_COLLECTION_NAME).documents().create(doc);
+            log.info("Document '{}' created successfully", doc.get("id").toString());
+        } catch (JsonProcessingException jsonException) {
+            throw new RuntimeException(jsonException);
+        } catch (Exception e1) {
+            log.error("Failed to document ImagePost %s.".formatted(doc.get("id").toString()), e1);
+        }
+    }
+
+    public void updateImagePostDocument(ImagePost imagePost, boolean insertIfNotFound) {
         Map<String, Object> doc = new HashMap<>();
         doc.put("id", imagePost.getId());
         doc.put("slug", imagePost.getSlug());
@@ -91,14 +107,23 @@ public class TypesenseServiceImpl implements TypesenseService {
         doc.put("thumbnail", imagePost.getThumbnail());
         doc.put("tags", imagePost.getTags().stream().map(Tag::getName).toArray(String[]::new));
         doc.put("image", imagePost.getImage().getVariants().stream().findFirst().orElse(new FileVariant()).getUrl());
-        try {
-            log.info(objectMapper.writeValueAsString(doc));
-            typesenseClient.collections(IMAGE_POST_COLLECTION_NAME).documents().create(doc);
-            log.info("Document '{}' created successfully", imagePost.getId());
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
-        } catch (Exception e) {
-            log.error("Failed to document ImagePost %s.".formatted(imagePost.getId()), e);
+
+        if (insertIfNotFound) {
+            try {
+                Map<String, Object> savedDoc = typesenseClient.collections(IMAGE_POST_COLLECTION_NAME).documents(imagePost.getId()).retrieve();
+                if (savedDoc != null) {
+                    typesenseClient.collections(IMAGE_POST_COLLECTION_NAME).documents(imagePost.getId()).update(doc);
+                    log.info("Document '{}' updated successfully", imagePost.getId());
+                }
+            } catch (Exception e) {
+                createImagePostDocument(doc);
+            }
+        } else {
+            try {
+                typesenseClient.collections(IMAGE_POST_COLLECTION_NAME).documents(imagePost.getId()).update(doc);
+            } catch (Exception exception) {
+                log.error("Error updating document", exception);
+            }
         }
     }
 }

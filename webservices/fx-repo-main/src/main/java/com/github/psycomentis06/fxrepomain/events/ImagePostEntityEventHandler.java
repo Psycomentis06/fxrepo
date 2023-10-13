@@ -2,11 +2,9 @@ package com.github.psycomentis06.fxrepomain.events;
 
 import com.github.psycomentis06.fxrepomain.entity.ImagePost;
 import com.github.psycomentis06.fxrepomain.service.TypesenseService;
-import jakarta.persistence.PostPersist;
-import org.springframework.stereotype.Component;
+import jakarta.persistence.PreUpdate;
 
 
-@Component
 public class ImagePostEntityEventHandler {
     private final TypesenseService typesenseService;
 
@@ -14,7 +12,7 @@ public class ImagePostEntityEventHandler {
         this.typesenseService = typesenseService;
     }
 
-    @PostPersist
+    @PreUpdate
     public void perPersistImagePost(ImagePost imagePost) {
         typesenseService.addImagePostDocument(imagePost);
     }
