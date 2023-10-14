@@ -7,17 +7,16 @@ import com.github.psycomentis06.fxrepomain.repository.FileVariantRepository;
 import com.github.psycomentis06.fxrepomain.repository.ImageFileRepository;
 import com.github.psycomentis06.fxrepomain.service.StorageService;
 import com.github.psycomentis06.fxrepomain.util.Http;
+import ij.ImagePlus;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
-import jakarta.websocket.server.PathParam;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/file/image")
@@ -38,8 +37,7 @@ public class ImageFileController {
     public ResponseEntity<ResponseObjModel> upload(
             @RequestParam(name = "file") MultipartFile img,
             HttpServletRequest servletRequest
-            ) {
-
+    ) {
         var f = storageService.store(img);
         var resObj = new ResponseObjModel();
         if (f == null) {
@@ -47,8 +45,21 @@ public class ImageFileController {
                     .setMessage("File not stored")
                     .setCode(HttpStatus.FORBIDDEN.value())
                     .setStatus(HttpStatus.FORBIDDEN);
-            return new ResponseEntity<>(resObj, HttpStatus.FORBIDDEN);
+            return new ResponseEntity<>(resObj, resObj.getStatus());
         }
+        ImagePlus jImage = new ImagePlus(storageService.getDirPath() + "/" + f);
+        int width = jImage.getWidth();
+        int height = jImage.getHeight();
+        if (width < 1280 || height < 720) {
+            // HD not allowed
+            storageService.delete(f);
+            resObj.setData(null)
+                    .setMessage("Image quality is not HD. Uploaded images should be at least(720x1280) pixels")
+                    .setCode(HttpStatus.BAD_REQUEST.value())
+                    .setStatus(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(resObj, resObj.getStatus());
+        }
+
 
         FileVariant fileVariant = new FileVariant();
         fileVariant.setOriginal(true);
