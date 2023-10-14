@@ -32,6 +32,10 @@ public class StorageServiceImpl implements StorageService {
         return StorageServiceStatus.UPLOAD_DIR_NOT_CREATED;
     }
 
+    public String getDirPath() {
+        return storageProperties.getDir();
+    }
+
     @Override
     public String store(MultipartFile file) {
         String newFileName = UUID.randomUUID().toString();
