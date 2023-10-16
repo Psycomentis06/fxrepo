@@ -1,5 +1,6 @@
 package com.github.psycomentis06.fxrepomain.entity;
 
+import com.github.psycomentis06.fxrepomain.events.CategoryEntityEventHandler;
 import com.github.psycomentis06.fxrepomain.validator.RgbaColorString;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -10,6 +11,7 @@ import org.hibernate.validator.constraints.URL;
 
 import java.util.Set;
 
+@EntityListeners(CategoryEntityEventHandler.class)
 @Entity
 @Table(name = "fx_category")
 @Data
