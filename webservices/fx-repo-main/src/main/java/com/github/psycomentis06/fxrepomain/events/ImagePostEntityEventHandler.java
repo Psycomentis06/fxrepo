@@ -1,32 +1,31 @@
 package com.github.psycomentis06.fxrepomain.events;
 
 import com.github.psycomentis06.fxrepomain.entity.ImagePost;
-import com.github.psycomentis06.fxrepomain.service.CategoryService;
 import com.github.psycomentis06.fxrepomain.service.TypesenseService;
-import jakarta.persistence.PostPersist;
-import jakarta.persistence.PostRemove;
 import jakarta.persistence.PostUpdate;
-import jakarta.persistence.PreUpdate;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreRemove;
+import org.springframework.context.ApplicationEventPublisher;
 
 
 public class ImagePostEntityEventHandler {
     private final TypesenseService typesenseService;
-    private final CategoryService categoryService;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
-    public ImagePostEntityEventHandler(TypesenseService typesenseService, CategoryService categoryService) {
+    public ImagePostEntityEventHandler(TypesenseService typesenseService, ApplicationEventPublisher applicationEventPublisher) {
         this.typesenseService = typesenseService;
-        this.categoryService = categoryService;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    @PreUpdate
-    public void perPersistImagePost(ImagePost imagePost) {
+    @PostUpdate
+    public void postUpdateImagePost(ImagePost imagePost) {
         typesenseService.addImagePostDocument(imagePost);
     }
 
-    @PostPersist
-    @PostUpdate
-    @PostRemove
+    @PrePersist
+    @PreRemove
     public void postImageCrudEvent(ImagePost imagePost) {
-        categoryService.refreshCategoryCache(imagePost.getCategory());
+        applicationEventPublisher
+                .publishEvent(new CategoryCacheUpdateEvent(this, imagePost.getCategory().getId()));
     }
 }
