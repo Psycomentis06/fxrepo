@@ -17,7 +17,7 @@ public interface CategoryRepository extends JpaRepository<Category, Integer> {
     Optional<Category> findByNameIgnoreCase(String name);
 
     @Query(
-            value = "SELECT c FROM Category c JOIN Post p ON c.id = p.category.id AND p.postType = ?2 WHERE c.name LIKE %?1%"
+            value = "SELECT DISTINCT c FROM Category c JOIN Post p ON c.id = p.category.id AND p.postType = ?2 WHERE c.name LIKE %?1%"
     )
     Page<Category> findByNameContainsIgnoreCase(String name, PostType p, Pageable pageable);
 }
