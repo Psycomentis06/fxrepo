@@ -40,6 +40,10 @@ public class ImagePostServiceImpl implements ImagePostService {
         savedImage.setAccentColor(imagePostDto.getImage().getAccentColor());
         savedImage.setColorPalette(imagePostDto.getImage().getColorPalette());
         savedImage.setPlacement(FileServicePlacement.STORAGE_SERVICE);
+        savedImage.setAverageHash(imagePostDto.getImage().getAverageHash());
+        savedImage.setColorHash(imagePostDto.getImage().getColorHash());
+        savedImage.setPerceptualHash(imagePostDto.getImage().getPerceptualHash());
+        savedImage.setDifferenceHash(imagePostDto.getImage().getDifferenceHash());
         var savedVariants = savedImage.getVariants();
         imagePostDto.getImage().getVariants().forEach(variant -> {
             var savedVariant = savedVariants

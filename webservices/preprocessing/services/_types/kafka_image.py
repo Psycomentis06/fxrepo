@@ -26,6 +26,10 @@ class ImageData(TypedDict):
     accentColor: str
     colorPalette: str
     landscape: str
+    perceptualHash: str
+    differenceHash: str
+    colorHash: str
+    averageHash: str
 
 
 @dataclass

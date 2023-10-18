@@ -13,6 +13,10 @@ public class ImageFileDto extends FileDto {
     private HashMap<String, String> accentColor;
     private Set<HashMap<String, String>> colorPalette;
     private boolean landscape;
+    private String perceptualHash;
+    private String differenceHash;
+    private String colorHash;
+    private String averageHash;
     private Set<ImagePostDto> posts;
 
     public String getAccentColor() {

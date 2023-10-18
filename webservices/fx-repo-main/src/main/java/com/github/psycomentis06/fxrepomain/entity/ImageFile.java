@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.lang.annotation.Target;
 import java.util.Set;
 
 @EqualsAndHashCode(callSuper = true)
@@ -19,6 +18,10 @@ public class ImageFile extends File {
     private String accentColor;
     private String colorPalette;
     private boolean landscape;
+    private String perceptualHash;
+    private String differenceHash;
+    private String colorHash;
+    private String averageHash;
     @OneToMany(mappedBy = "image")
     private Set<ImagePost> posts;
 }

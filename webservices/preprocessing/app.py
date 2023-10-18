@@ -7,6 +7,7 @@ import sys
 import uuid
 from datetime import datetime
 
+import imagehash
 from confluent_kafka import KafkaException
 from containers import root_container
 from services.kafka import KafkaTopics, decode, encode
@@ -85,6 +86,10 @@ def process_image(img_data: ImagePostData):
 
     img_data['nsfw'] = image_service.is_nsfw(image_file_path)
 
+    image_object['perceptualHash'] = str(imagehash.phash(pil_image))
+    image_object['averageHash'] = str(imagehash.average_hash(pil_image))
+    image_object['differenceHash'] = str(imagehash.dhash(pil_image))
+    image_object['colorHash'] = str(imagehash.colorhash(pil_image))
     km, flat_array = image_service.get_kmeans_img_model(pil_image)
     image_object['accentColor'] = image_service.get_accent_color(km, flat_array)
     image_object['colorPalette'] = image_service.get_color_palette(km)
