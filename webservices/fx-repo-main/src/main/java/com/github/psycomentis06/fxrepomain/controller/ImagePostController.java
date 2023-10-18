@@ -1,11 +1,9 @@
 package com.github.psycomentis06.fxrepomain.controller;
 
-import com.github.psycomentis06.fxrepomain.entity.Category;
-import com.github.psycomentis06.fxrepomain.entity.ImagePost;
-import com.github.psycomentis06.fxrepomain.entity.PostType;
-import com.github.psycomentis06.fxrepomain.entity.Tag;
+import com.github.psycomentis06.fxrepomain.entity.*;
 import com.github.psycomentis06.fxrepomain.model.ImagePostCreateModel;
 import com.github.psycomentis06.fxrepomain.model.ResponseObjModel;
+import com.github.psycomentis06.fxrepomain.model.records.ImagePostListModel;
 import com.github.psycomentis06.fxrepomain.projection.ImagePostListProjection;
 import com.github.psycomentis06.fxrepomain.repository.CategoryRepository;
 import com.github.psycomentis06.fxrepomain.repository.ImageFileRepository;
@@ -14,7 +12,7 @@ import com.github.psycomentis06.fxrepomain.service.KafkaService;
 import com.github.psycomentis06.fxrepomain.service.TagService;
 import com.github.psycomentis06.fxrepomain.specification.ImagePostSpecification;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,7 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Comparator;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -105,7 +105,7 @@ public class ImagePostController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<Page<ImagePostListProjection>> getAll(
+    public ResponseEntity<Object> getAll(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "limit", defaultValue = "10") int limit,
             @RequestParam(value = "search", required = false, defaultValue = "") String search,
@@ -117,14 +117,38 @@ public class ImagePostController {
 //        var posts = imagePostRepository.findAllByTitleContains(ImagePostListProjection.class, search, pageable);
         Specification<ImagePost> imagePostSpecification = ImagePostSpecification
                 .isPublic()
-//                .and(ImagePostSpecification.isReady())
+                .and(ImagePostSpecification.isReady())
 //                .and(ImagePostSpecification.isNsfw(nsfw))
                 .and(ImagePostSpecification.getByCategoryId(category))
                 .and(ImagePostSpecification.getByTagName(tag))
                 .and(
                         ImagePostSpecification.getByImageDescriptionContains(search)
                                 .or(ImagePostSpecification.getByImageTitleContains(search)));
-        var posts = imagePostRepository.findBy(imagePostSpecification, q -> q.as(ImagePostListProjection.class).page(pageable));
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+        var postsPage = imagePostRepository.findBy(imagePostSpecification, q -> q.as(ImagePostListProjection.class).page(pageable));
+        List<ImagePostListModel> postsListModel = postsPage
+                .stream()
+                .map(p -> {
+                    String imageUrl = p
+                            .getImage()
+                            .getVariants()
+                            .stream()
+                            .min(Comparator.comparing(FileVariant::getWidth).thenComparing(FileVariant::getHeight))
+                            .orElseGet(null)
+                            .getUrl();
+                    if (imageUrl == null) return null;
+                    return new ImagePostListModel(
+                            p.getId(),
+                            p.getTitle(),
+                            p.getSlug(),
+                            imageUrl,
+                            p.getThumbnail(),
+                            p.isNsfw(),
+                            p.getCategory().getName(),
+                            p.getTags().stream().map(Tag::getName).toList()
+                    );
+                })
+                .toList();
+        var postsNewPage = new PageImpl<>(postsListModel, pageable, postsPage.getTotalElements());
+        return new ResponseEntity<>(postsNewPage, HttpStatus.OK);
     }
 }

@@ -13,7 +13,7 @@ public interface ImagePostListProjection {
 
     String getUserId();
 
-    String isNsfw();
+    boolean isNsfw();
 
     List<Tag> getTags();
 
