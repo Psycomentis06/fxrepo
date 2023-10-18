@@ -1,11 +1,9 @@
 package com.github.psycomentis06.fxrepomain.controller;
 
-import com.github.psycomentis06.fxrepomain.entity.Post;
 import com.github.psycomentis06.fxrepomain.entity.PostType;
 import com.github.psycomentis06.fxrepomain.model.ExceptionModel;
 import com.github.psycomentis06.fxrepomain.model.ResponseObjModel;
 import com.github.psycomentis06.fxrepomain.repository.PostRepository;
-import com.github.psycomentis06.fxrepomain.util.Sort;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +49,6 @@ public class TagController {
                 .setMessage("Success")
                 .setCode(HttpStatus.OK.value())
                 .setStatus(HttpStatus.OK);
-        return new ResponseEntity<>(t, resObj.getStatus());
+        return new ResponseEntity<>(resObj, resObj.getStatus());
     }
 }
