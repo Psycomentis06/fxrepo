@@ -5,20 +5,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.psycomentis06.fxrepomain.entity.FileVariant;
 import com.github.psycomentis06.fxrepomain.entity.ImagePost;
 import com.github.psycomentis06.fxrepomain.entity.Tag;
+import com.github.psycomentis06.fxrepomain.model.records.ImagePostListModel;
 import com.github.psycomentis06.fxrepomain.typesense.TypesenseClient;
+import com.github.psycomentis06.fxrepomain.util.Sort;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.typesense.api.FieldTypes;
-import org.typesense.model.CollectionSchema;
-import org.typesense.model.Field;
-import org.typesense.model.FieldEmbed;
-import org.typesense.model.FieldEmbedModelConfig;
+import org.typesense.model.*;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Slf4j(topic = "TypesenseServiceImpl")
@@ -106,7 +102,17 @@ public class TypesenseServiceImpl implements TypesenseService {
         doc.put("category", imagePost.getCategory().getName());
         doc.put("thumbnail", imagePost.getThumbnail());
         doc.put("tags", imagePost.getTags().stream().map(Tag::getName).toArray(String[]::new));
-        doc.put("image", imagePost.getImage().getVariants().stream().findFirst().orElse(new FileVariant()).getUrl());
+        String imageUrl = imagePost
+                .getImage()
+                .getVariants()
+                .stream()
+                .min(
+                        Comparator.comparing(FileVariant::getWidth)
+                                .thenComparing(Comparator.comparing(FileVariant::getHeight))
+                )
+                .orElseGet(FileVariant::new)
+                .getUrl();
+        doc.put("image", imageUrl);
 
         if (insertIfNotFound) {
             try {
@@ -124,6 +130,25 @@ public class TypesenseServiceImpl implements TypesenseService {
             } catch (Exception exception) {
                 log.error("Error updating document", exception);
             }
+        }
+    }
+
+    public SearchResult getImagePosts(String query, int page, int perPage, String sortField, String direction) {
+        String sortF = Sort.getSortAttributeName(ImagePostListModel.class, sortField, "title");
+        if (query == null) query = "*";
+        if (perPage == 0) perPage = 10;
+        if (direction.length() == 0) direction = "asc";
+        SearchParameters params = new SearchParameters()
+                .q(query)
+                .queryBy("embedding,title,content,category,tags")
+//                .sortBy(sortF + ":" + direction)
+                .page(page)
+                .perPage(perPage);
+        try {
+            return typesenseClient.collections(IMAGE_POST_COLLECTION_NAME).documents().search(params);
+        } catch (Exception e) {
+            log.error("Error searching documents", e);
+            return null;
         }
     }
 }

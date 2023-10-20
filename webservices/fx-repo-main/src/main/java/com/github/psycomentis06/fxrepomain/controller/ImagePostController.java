@@ -1,5 +1,6 @@
 package com.github.psycomentis06.fxrepomain.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.psycomentis06.fxrepomain.entity.*;
 import com.github.psycomentis06.fxrepomain.model.ImagePostCreateModel;
 import com.github.psycomentis06.fxrepomain.model.ResponseObjModel;
@@ -10,6 +11,7 @@ import com.github.psycomentis06.fxrepomain.repository.ImageFileRepository;
 import com.github.psycomentis06.fxrepomain.repository.ImagePostRepository;
 import com.github.psycomentis06.fxrepomain.service.KafkaService;
 import com.github.psycomentis06.fxrepomain.service.TagService;
+import com.github.psycomentis06.fxrepomain.service.TypesenseService;
 import com.github.psycomentis06.fxrepomain.specification.ImagePostSpecification;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.PageImpl;
@@ -34,13 +36,17 @@ public class ImagePostController {
     private CategoryRepository categoryRepository;
     private ImageFileRepository imageFileRepository;
     private KafkaService kafkaService;
+    private TypesenseService typesenseService;
+    private ObjectMapper objectMapper;
 
-    public ImagePostController(ImagePostRepository imagePostRepository, TagService tagService, CategoryRepository categoryRepository, ImageFileRepository imageFileRepository, KafkaService kafkaService) {
+    public ImagePostController(ImagePostRepository imagePostRepository, TagService tagService, CategoryRepository categoryRepository, ImageFileRepository imageFileRepository, KafkaService kafkaService, TypesenseService typesenseService, ObjectMapper objectMapper) {
         this.imagePostRepository = imagePostRepository;
         this.tagService = tagService;
         this.categoryRepository = categoryRepository;
         this.imageFileRepository = imageFileRepository;
         this.kafkaService = kafkaService;
+        this.typesenseService = typesenseService;
+        this.objectMapper = objectMapper;
     }
 
     @PostMapping("/new")
@@ -150,5 +156,31 @@ public class ImagePostController {
                 .toList();
         var postsNewPage = new PageImpl<>(postsListModel, pageable, postsPage.getTotalElements());
         return new ResponseEntity<>(postsNewPage, HttpStatus.OK);
+    }
+
+    @GetMapping("/ts")
+    public Object getAllTypesense(
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(value = "search", required = false, defaultValue = "") String search,
+            @RequestParam(value = "tag", required = false) String tag,
+            @RequestParam(value = "category", required = false) String category,
+            @RequestParam(value = "nsfw", required = false, defaultValue = "false") boolean nsfw
+    ) {
+
+        var res = typesenseService.getImagePosts(search, page + 1, limit, "", "asc");
+        List<ImagePostListModel> imagePosts = res
+                .getHits()
+                .stream()
+                .map(hit -> {
+                    var d = hit.getDocument();
+                    try {
+                        return objectMapper.convertValue(d, ImagePostListModel.class);
+                    } catch (Exception e) {
+                        return null;
+                    }
+                })
+                .toList();
+        return imagePosts;
     }
 }
