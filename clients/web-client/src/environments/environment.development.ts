@@ -2,7 +2,7 @@ export const environment = {
   production: false,
   api: {
     fx_main: {
-      v1: 'http://localhost:8000/api/v1'
+      v1: 'http://localhost:9057/api/v1'
     }
   }
 };

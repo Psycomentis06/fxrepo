@@ -1,9 +1,14 @@
-<div class="flex flex-wrap" style="gap: 10px">
-  <button (click)="showImageDetailsDialog(ind + '')" *ngFor="let i of images;index as ind"
-          class="w-96 h-56 flex-grow-[1] transition duration-100 active:scale-90">
-    <app-image-card/>
-  </button>
-
+<section>
+  <h1 class="text-primary-content m-5">Total images found ({{imagePostsPage?.totalElements}})</h1>
+  <div>
+    <div class="flex flex-wrap bg-base-200 p-4" style="gap: 10px">
+      <button (click)="showImageDetailsDialog(ind + '')" *ngFor="let image of images;index as ind"
+              class="w-96 h-56 flex-grow-[1] transition duration-100 active:scale-90">
+        <app-image-card [imagePost]="image"/>
+      </button>
+    </div>
+    <app-pagination [page]="imagePostsPage" (pageChange)="getImagePostsPage()"/>
+  </div>
   <dialog #imageDetailsDialog class="modal">
     <div class="modal-box w-2/3">
       <button class="absolute top-0 right-0 btn btn-ghost btn-circle"
@@ -14,4 +19,4 @@
       <app-image-details *ngIf="imageDetailsDialog.open" [slug]="selectedImageSlug"/>
     </div>
   </dialog>
-</div>
+</section>

@@ -1,5 +1,8 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
+import {ImagePostService} from "../../../services/image-post.service";
+import {ImagePostListModel} from "../../../models/image-post";
+import {Page} from "../../../models/page";
 
 @Component({
   selector: 'app-images',
@@ -8,21 +11,18 @@ import {Router} from "@angular/router";
 })
 export class ImagesComponent implements AfterViewInit {
   @ViewChild('imageDetailsDialog') imageDetailsDialog?: ElementRef<HTMLDialogElement>;
-  images = [
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-  ]
+  images: ImagePostListModel[] = []
+  imagePostsPage?: Page<ImagePostListModel[]>
   selectedImageSlug = ''
 
-  constructor(private router: Router) {
+  constructor(private router: Router,
+              private activatedRoute: ActivatedRoute,
+              private imagePostService: ImagePostService) {
   }
 
   ngAfterViewInit() {
+    this.getImagePostsPage()
+
     window.addEventListener('popstate', (e) => {
       console.log(e.state)
       if (e.state && e.state.event === 'open') {
@@ -37,6 +37,16 @@ export class ImagesComponent implements AfterViewInit {
         }
       }
     })
+  }
+
+  getImagePostsPage() {
+    const page = Number(this.activatedRoute.snapshot.queryParamMap.get("page")) || 0
+    const search = this.activatedRoute.snapshot.queryParamMap.get("search") || ""
+    this.imagePostService.getImagePostPage(page, 2, search, false)
+      .subscribe(d => {
+        this.imagePostsPage = d
+        this.images = d.content
+      })
   }
 
   showImageDetailsDialog(slug: string) {

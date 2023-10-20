@@ -13,6 +13,7 @@ import {heroEyeSolid, heroHandThumbUpSolid} from '@ng-icons/heroicons/solid'
 import {ReactiveFormsModule} from "@angular/forms";
 import {ImageCardComponent} from './components/image-card/image-card.component';
 import { ImageDetailsComponent } from './image-details/image-details.component';
+import { PaginationComponent } from './components/pagination/pagination.component';
 
 
 @NgModule({
@@ -24,7 +25,8 @@ import { ImageDetailsComponent } from './image-details/image-details.component';
     UploadImageFileComponent,
     CreateImageFormComponent,
     ImageCardComponent,
-    ImageDetailsComponent
+    ImageDetailsComponent,
+    PaginationComponent
   ],
   imports: [
     CommonModule,

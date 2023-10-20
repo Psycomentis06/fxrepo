@@ -1,4 +1,5 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {ImagePostListModel} from "../../../../models/image-post";
 
 @Component({
   selector: 'app-image-card',
@@ -6,5 +7,6 @@ import {Component} from '@angular/core';
   styleUrls: ['./image-card.component.scss']
 })
 export class ImageCardComponent {
+  @Input() imagePost?: ImagePostListModel
 
 }
