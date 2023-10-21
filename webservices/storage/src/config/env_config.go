@@ -17,6 +17,11 @@ type EnvConfig struct {
 	// Service's config
 	ServiceUsername string
 	ServicePassword string
+
+	// Kafka
+	KafkaBootstrapServers string
+	KafkaGroupId          string
+	KafkaAutoOffsetReset  string
 }
 
 func GetEnvConfig() EnvConfig {
@@ -36,6 +41,10 @@ func GetEnvConfig() EnvConfig {
 
 	config.ServiceUsername = os.Getenv("USERNAME")
 	config.ServicePassword = os.Getenv("PASSWORD")
+
+	config.KafkaBootstrapServers = os.Getenv("KAFKA_BOOTSTRAP_SERVERS")
+	config.KafkaGroupId = os.Getenv("KAFKA_GROUP_ID")
+	config.KafkaAutoOffsetReset = os.Getenv("KAFKA_AUTO_OFFSET_RESET")
 
 	ref := reflect.ValueOf(config)
 	typeOfRef := ref.Type()

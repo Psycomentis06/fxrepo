@@ -16,6 +16,10 @@ services:
       - PASSWORD=user
       # Gin mode
       - GIN_MODE=debug
+      # Kafka
+      - KAFKA_BOOTSTRAP_SERVERS=fx-kafka:9092
+      - KAFKA_GROUP_ID=fx_storage
+      - KAFKA_AUTO_OFFSET_RESET=earliest
     ports:
       - "9055:8080"
     networks:

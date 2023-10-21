@@ -45,6 +45,11 @@ func main() {
 		}
 	}
 
+	go func() {
+		log.Println("Kafka consumer started")
+		ctx := context.Background()
+		services.KafkaConsumer(&ctx, &cnf, mc)
+	}()
 	err := r.Run()
 	if err != nil {
 		log.Panicf(err.Error())

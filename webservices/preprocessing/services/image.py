@@ -111,12 +111,10 @@ class ImageService:
         try:
             n_img.save(new_file_path, "PNG")
             self.logger.info("Image variant {} created".format(new_file_path))
-            variant_id = filepath.split('/')
-            variant_id = variant_id[len(variant_id) - 1]
             with open(new_file_path, "rb") as new_img_var_file:
                 new_img_var_data = new_img_var_file.read()
                 data: kafka_image.ImageVariantData = {
-                    "id": variant_id,
+                    "id": 0,
                     "width": n_img.width,
                     "height": n_img.height,
                     "original": False,
