@@ -36,7 +36,7 @@ export class PaginationComponent {
       this.router.navigate([], {queryParams: {page: page}})
         .then(() => {
           this.pageChange.emit(page)
-          this.pageJumpInput = page
+          this.pageJumpInput = page + ""
         })
     }
   }
