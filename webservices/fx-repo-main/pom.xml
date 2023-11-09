@@ -17,7 +17,7 @@
         <java.version>17</java.version>
         <spring-cloud.version>2022.0.3</spring-cloud.version>
         <org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
-        <lombok.verison>1.18.28</lombok.verison>
+        <lombok.version>1.18.28</lombok.version>
     </properties>
     <dependencies>
         <dependency>
@@ -92,7 +92,7 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
             <scope>provided</scope>
-            <version>${lombok.verison}</version>
+            <version>${lombok.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
