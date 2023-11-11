@@ -64,7 +64,7 @@ public class ImagePostController {
         postData.getTags().forEach(
                 t -> {
                     var tag = tagService.getOrCreateTag(t);
-                    tags.add(tag);
+                    if (tag != null) tags.add(tag);
                 }
         );
         imagePost.setTags(tags);
