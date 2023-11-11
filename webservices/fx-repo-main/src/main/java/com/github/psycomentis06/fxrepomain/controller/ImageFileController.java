@@ -65,6 +65,8 @@ public class ImageFileController {
         fileVariant.setOriginal(true);
         fileVariant.setUrl(Http.getHostUrl(servletRequest) + "/api/v1/image/" + f);
         fileVariant.setTitle("Original");
+        fileVariant.setWidth(width);
+        fileVariant.setHeight(height);
         var variant = fileVariantRepository.save(fileVariant);
         ImageFile imageFile = new ImageFile();
         imageFile.setId(f);

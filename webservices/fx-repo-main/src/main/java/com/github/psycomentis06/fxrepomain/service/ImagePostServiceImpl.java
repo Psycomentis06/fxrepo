@@ -1,5 +1,6 @@
 package com.github.psycomentis06.fxrepomain.service;
 
+import com.github.psycomentis06.fxrepomain.dto.FileVariantDto;
 import com.github.psycomentis06.fxrepomain.dto.ImagePostDto;
 import com.github.psycomentis06.fxrepomain.entity.FileServicePlacement;
 import com.github.psycomentis06.fxrepomain.entity.FileVariant;
@@ -53,17 +54,9 @@ public class ImagePostServiceImpl implements ImagePostService {
                     .orElse(null);
             if (savedVariant == null) {
                 var variant1 = new FileVariant();
-                variant1.setTitle(variant.getTitle());
-                variant1.setSize(variant.getSize());
-                variant1.setUrl(variant.getUrl());
-                variant1.setWidth(variant.getWidth());
-                variant1.setHeight(variant.getHeight());
-                variant1.setMd5(variant.getMd5());
-                variant1.setSha256(variant.getSha256());
-                variant1.setOriginal(variant.isOriginal());
-                savedVariants.add(variant1);
+                savedVariants.add(updateFileVariant(variant1, variant));
             } else {
-                savedVariants.add(savedVariant);
+                savedVariants.add(updateFileVariant(savedVariant, variant));
             }
         });
         // update tags
@@ -74,5 +67,17 @@ public class ImagePostServiceImpl implements ImagePostService {
         });
         savedPost.setTags(tags);
         imagePostRepository.save(savedPost);
+    }
+
+    private FileVariant updateFileVariant(FileVariant fileVariant, FileVariantDto fileVariantDto) {
+        fileVariant.setTitle(fileVariantDto.getTitle());
+        fileVariant.setSize(fileVariantDto.getSize());
+        fileVariant.setUrl(fileVariantDto.getUrl());
+        fileVariant.setWidth(fileVariantDto.getWidth());
+        fileVariant.setHeight(fileVariantDto.getHeight());
+        fileVariant.setMd5(fileVariantDto.getMd5());
+        fileVariant.setSha256(fileVariantDto.getSha256());
+        fileVariant.setOriginal(fileVariantDto.isOriginal());
+        return fileVariant;
     }
 }
