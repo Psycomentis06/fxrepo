@@ -5,6 +5,7 @@ import com.github.psycomentis06.fxrepomain.dto.ImagePostDto;
 import com.github.psycomentis06.fxrepomain.entity.FileServicePlacement;
 import com.github.psycomentis06.fxrepomain.entity.FileVariant;
 import com.github.psycomentis06.fxrepomain.entity.Tag;
+import com.github.psycomentis06.fxrepomain.repository.FileVariantRepository;
 import com.github.psycomentis06.fxrepomain.repository.ImagePostRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -17,10 +18,12 @@ import java.util.Set;
 public class ImagePostServiceImpl implements ImagePostService {
     private ImagePostRepository imagePostRepository;
     private TagService tagService;
+    private FileVariantRepository fileVariantRepository;
 
-    public ImagePostServiceImpl(ImagePostRepository imagePostRepository, TagService tagService) {
+    public ImagePostServiceImpl(ImagePostRepository imagePostRepository, TagService tagService, FileVariantRepository fileVariantRepository) {
         this.imagePostRepository = imagePostRepository;
         this.tagService = tagService;
+        this.fileVariantRepository = fileVariantRepository;
     }
 
     @Transactional
@@ -56,14 +59,14 @@ public class ImagePostServiceImpl implements ImagePostService {
                 var variant1 = new FileVariant();
                 savedVariants.add(updateFileVariant(variant1, variant));
             } else {
-                savedVariants.add(updateFileVariant(savedVariant, variant));
+                fileVariantRepository.save(updateFileVariant(savedVariant, variant));
             }
         });
         // update tags
         Set<Tag> tags = new HashSet<>();
         imagePostDto.getTags().forEach(t -> {
             var tag = tagService.getOrCreateTag(t.getName());
-            tags.add(tag);
+            if (tag != null) tags.add(tag);
         });
         savedPost.setTags(tags);
         imagePostRepository.save(savedPost);
