@@ -165,10 +165,12 @@ public class ImagePostController {
             @RequestParam(value = "search", required = false, defaultValue = "") String search,
             @RequestParam(value = "tag", required = false) String tag,
             @RequestParam(value = "category", required = false) String category,
-            @RequestParam(value = "nsfw", required = false, defaultValue = "false") boolean nsfw
+            @RequestParam(value = "nsfw", required = false, defaultValue = "false") boolean nsfw,
+            @RequestParam(value = "raw", required = false, defaultValue = "false") boolean raw
     ) {
 
         var res = typesenseService.getImagePosts(search, page + 1, limit, "", "asc");
+        if (raw) return res.getHits();
         List<ImagePostListModel> imagePosts = res
                 .getHits()
                 .stream()
