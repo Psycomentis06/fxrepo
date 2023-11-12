@@ -173,6 +173,8 @@ services:
     extends:
       service: fx-preprocessing
     command: celery -A app.celery_app worker -l info
+    deploy:
+      replicas: 3
 
   fx-celery-flower:
     extends:
