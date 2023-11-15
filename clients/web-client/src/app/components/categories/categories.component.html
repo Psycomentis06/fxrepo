@@ -1,0 +1,59 @@
+<div *ngIf="!categoriesDialog.open" class="categories-component  my-4 mx-2 h-full">
+    <h1 class="text-primary text-xl text-center my-5 font-bold">Categories</h1>
+    <div class="divider"></div>
+    <div class="categories-list md:w-[200px] overflow-scroll max-h-[100vh]">
+        <ul>
+            <li *ngIf="selectedCategory">
+                <button (click)="clearCategoryFilter()"
+                        class="flex items-center justify-center bg-white text-black px-4 py-2 rounded active:scale-95 transition duration-100 my-2">
+                    {{selectedCategory.name.length === 0 ? 'Default' : selectedCategory.name}}
+                    <ng-icon name="heroXCircle" size="20"/>
+                </button>
+            </li>
+            <li *ngFor="let cat of categories">
+                <button (click)="selectCategory(cat)"
+                        class="bg-base-200 px-4 py-2 rounded active:scale-95 transition duration-100 my-2">
+                    {{cat.name.length === 0 ? 'Default' : cat.name}}
+                    <div class="badge">{{cat.posts}}</div>
+                </button>
+            </li>
+        </ul>
+    </div>
+    <button class="btn btn-primary my-4 btn-wide" (click)="categoriesDialog.showModal()">View All</button>
+</div>
+
+<dialog id="categories_modal" class="modal" #categoriesDialog>
+    <div class="modal-box max-w-full max-h-full">
+        <h1 class="text-primary text-xl text-center my-1 font-bold">Categories</h1>
+        <div class="divider"></div>
+        <div class="flex flex-row items-center">
+            <div class="join">
+                <input class="input input-bordered join-item" placeholder="Category Name" #categoriesSearchInput/>
+                <button (click)="getCategories(categoriesSearchInput.value)"
+                        class="btn join-item rounded-r-full btn-primary">Search
+                </button>
+            </div>
+            <button *ngIf="selectedCategory" (click)="clearCategoryFilter()"
+                    class="flex items-center justify-center bg-white text-black px-4 py-2 rounded active:scale-95 transition duration-100 my-2">
+                {{selectedCategory.name.length === 0 ? 'Default' : selectedCategory.name}}
+                <ng-icon name="heroXCircle" size="20"/>
+            </button>
+        </div>
+        <div class="divider"></div>
+        <div class="categories-list overflow-scroll">
+            <ul class="flex flex-row" style="gap: 10px">
+
+                <li *ngFor="let cat of categories">
+                    <button (click)="selectCategory(cat)"
+                            class="bg-base-200 px-4 py-2 rounded active:scale-95 transition duration-100 my-2">
+                        {{cat.name.length === 0 ? 'Default' : cat.name}}
+                        <div class="badge">{{cat.posts}}</div>
+                    </button>
+                </li>
+            </ul>
+        </div>
+        <div class="modal-action">
+            <button class="btn" (click)="categoriesDialog.close();">Close</button>
+        </div>
+    </div>
+</dialog>

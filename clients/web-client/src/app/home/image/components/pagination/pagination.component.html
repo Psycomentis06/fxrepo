@@ -1,8 +1,9 @@
 <div *ngIf="page" class="join">
-  <button class="join-item btn" (click)="goToPage(page.number - 1)">«</button>
-  <button *ngIf="!pageEditMode" class="join-item btn" (click)="pageEditMode = true">Page {{page.number}}</button>
-  <button *ngIf="pageEditMode" class="btn join-item btn-success" (click)="jumpToPage()" >V</button>
-  <input *ngIf="pageEditMode" type="text" class="input p-2" placeholder="Jump to page N: " (keyup)="handlePageJumpInputChange($event)" ) >
-  <button *ngIf="pageEditMode" class="btn join-item btn-error" (click)="cancelEdit()">X</button>
-  <button class="join-item btn" (click)="goToPage(page.number + 1)">»</button>
+    <button class="join-item btn" (click)="goToPage(page.number - 1)">«</button>
+    <button *ngIf="!pageEditMode" class="join-item btn" (click)="pageEditMode = true">Page {{page.number + 1}}</button>
+    <button *ngIf="pageEditMode" class="btn join-item btn-success" (click)="jumpToPage()">V</button>
+    <input *ngIf="pageEditMode" type="text" class="input p-2 " placeholder="Jump to page N: "
+           (keyup)="handlePageJumpInputChange($event)">
+    <button *ngIf="pageEditMode" class="btn join-item btn-error" (click)="cancelEdit()">X</button>
+    <button class="join-item btn" (click)="goToPage(page.number + 1)">»</button>
 </div>

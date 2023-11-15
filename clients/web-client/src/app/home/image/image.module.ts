@@ -14,6 +14,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {ImageCardComponent} from './components/image-card/image-card.component';
 import { ImageDetailsComponent } from './image-details/image-details.component';
 import { PaginationComponent } from './components/pagination/pagination.component';
+import {CategoriesModule} from "../../components/categories/categories.module";
 
 
 @NgModule({
@@ -40,7 +41,8 @@ import { PaginationComponent } from './components/pagination/pagination.componen
       heroEyeSolid,
       heroHandThumbUpSolid,
       heroXMark
-    })
+    }),
+    CategoriesModule
   ]
 })
 export class ImageModule {
