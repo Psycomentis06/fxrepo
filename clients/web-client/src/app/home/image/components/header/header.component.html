@@ -1,7 +1,8 @@
 <div class="px-3 py-2 flex flex-col md:flex-row bg-base-100">
   <div class="join w-full my-3 md:my-auto">
-    <input class="input input-bordered bg-neutral join-item w-full md:w-1/2" placeholder="Search..."/>
-    <button class="btn join-item bg-primary">Search</button>
+    <input #imagesHeaderSearchInput class="input input-bordered bg-neutral join-item w-full md:w-1/2" placeholder="Search..."/>
+    <button class="btn join-item bg-primary" (click)="searchImages(imagesHeaderSearchInput.value)">Search</button>
+    <button *ngIf="imagesHeaderSearchInput.value.length > 0" class="btn join-item bg-secondary" (click)="clearSearch(); imagesHeaderSearchInput.value = ''">Clear</button>
   </div>
   <a routerLink="images/post" class="btn rounded btn-secondary">
     Upload Image
