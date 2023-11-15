@@ -41,8 +41,7 @@
         </div>
         <div class="divider"></div>
         <div class="categories-list overflow-scroll">
-            <ul class="flex flex-row" style="gap: 10px">
-
+            <ul class="flex flex-row flex-wrap" style="gap: 10px">
                 <li *ngFor="let cat of categories">
                     <button (click)="selectCategory(cat)"
                             class="bg-base-200 px-4 py-2 rounded active:scale-95 transition duration-100 my-2">
