@@ -185,4 +185,19 @@ public class ImagePostController {
                 .toList();
         return imagePosts;
     }
+
+   @GetMapping("/slug/{slug}")
+    public ResponseEntity<ResponseObjModel> getPostBySlug(
+            @PathVariable String slug
+    ) {
+        var imgPost = imagePostRepository.findBySlugEquals(slug);
+        var obj = imgPost.orElseThrow(() -> new EntityNotFoundException("Post not found"));
+        ResponseObjModel o = new ResponseObjModel();
+        o
+                .setData(obj)
+                .setMessage("Post file found")
+                .setStatus(HttpStatus.OK)
+                .setCode(HttpStatus.OK.value());
+        return new ResponseEntity<>(o, HttpStatus.OK);
+    }
 }

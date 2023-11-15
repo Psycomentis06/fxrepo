@@ -14,4 +14,12 @@ public interface ImageFileImagePostListProjection {
     String isLandscape();
 
     List<FileVariant> getVariants();
+
+    String getPerceptualHash();
+
+    String getDifferenceHash();
+
+    String getColorHash();
+
+    String getAverageHash();
 }
