@@ -24,6 +24,7 @@ export class ImagePostService {
 
     readonly CREATE_NEW_IMAGE_POST_ENDPOINT = environment.api.fx_main.v1 + '/post/image/new';
     readonly GET_IMAGE_POST_PAGE_ENDPOINT = environment.api.fx_main.v1 + '/post/image/list';
+    readonly GET_IMAGE_POST_BY_SLUG_ENDPOINT = environment.api.fx_main.v1 + '/post/image/{slug}';
     private imagePostsFilterData: ImagePostsFilter
     private $imagePostsFilterSubject: BehaviorSubject<ImagePostsFilter>
     private _imagePostsFilterObservable: Observable<Page<ImagePostListModel[]>>
@@ -88,5 +89,9 @@ export class ImagePostService {
         if (data.category && data.category <= 0) delete this.imagePostsFilterData.category
         if (data.tag && data.tag.trim().length === 0) delete this.imagePostsFilterData.tag
         this.$imagePostsFilterSubject.next(this.imagePostsFilterData)
+    }
+
+    getImagePostBySlug(slug: string) {
+        return this.http.get<ResponseModel<ImagePostModel>>(this.GET_IMAGE_POST_BY_SLUG_ENDPOINT.replace("slug", slug))
     }
 }

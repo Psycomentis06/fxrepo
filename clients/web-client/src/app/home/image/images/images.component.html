@@ -4,7 +4,7 @@
         <h1 class="text-primary-content m-5">Total images found ({{imagePostsPage?.totalElements}})</h1>
         <div>
             <div class="flex flex-wrap bg-base-200 p-4" style="gap: 10px">
-                <button (click)="showImageDetailsDialog(ind + '')" *ngFor="let image of images;index as ind"
+                <button (click)="showImageDetailsDialog(image.slug)" *ngFor="let image of images;"
                         class="w-96 h-56 flex-grow-[1] transition duration-100 active:scale-90">
                     <app-image-card [imagePost]="image"/>
                 </button>

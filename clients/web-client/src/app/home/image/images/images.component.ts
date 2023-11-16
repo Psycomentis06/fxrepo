@@ -14,7 +14,7 @@ export class ImagesComponent implements AfterViewInit {
     @ViewChild('imageDetailsDialog') imageDetailsDialog?: ElementRef<HTMLDialogElement>;
     images: ImagePostListModel[] = []
     imagePostsPage?: Page<ImagePostListModel[]>
-    selectedImageSlug = ''
+    selectedImageSlug?: string
 
     constructor(private router: Router,
                 private activatedRoute: ActivatedRoute,
@@ -70,6 +70,7 @@ export class ImagesComponent implements AfterViewInit {
     closeModal() {
         if (!this.imageDetailsDialog) return
         this.imageDetailsDialog.nativeElement.close()
+        this.selectedImageSlug = undefined
         window.history.replaceState({event: 'close'}, '', '/images')
     }
 }
