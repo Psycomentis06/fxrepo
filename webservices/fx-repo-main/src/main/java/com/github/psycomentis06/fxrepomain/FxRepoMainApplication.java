@@ -5,12 +5,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.github.psycomentis06.fxrepomain.dto.ImagePostDto;
 import com.github.psycomentis06.fxrepomain.entity.KafkaEvent;
+import com.github.psycomentis06.fxrepomain.entity.Role;
 import com.github.psycomentis06.fxrepomain.model.kafka.Action;
 import com.github.psycomentis06.fxrepomain.model.kafka.KafkaEventModel;
 import com.github.psycomentis06.fxrepomain.model.kafka.Status;
 import com.github.psycomentis06.fxrepomain.model.kafka.Target;
 import com.github.psycomentis06.fxrepomain.properties.StorageProperties;
 import com.github.psycomentis06.fxrepomain.repository.KafkaEventRepository;
+import com.github.psycomentis06.fxrepomain.repository.PermissionRepository;
+import com.github.psycomentis06.fxrepomain.repository.RoleRepository;
 import com.github.psycomentis06.fxrepomain.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -22,6 +25,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.kafka.annotation.KafkaListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 @Slf4j(topic = "Main")
 @SpringBootApplication
@@ -107,7 +112,7 @@ public class FxRepoMainApplication {
     }
 
     @Bean
-    public CommandLineRunner init(StorageService storageService, TypesenseService typesenseService) {
+    public CommandLineRunner init(StorageService storageService, TypesenseService typesenseService, RoleRepository roleRepository, PermissionRepository permissionRepository) {
         return (args) -> {
             var s = storageService.init();
             switch (s) {
@@ -116,6 +121,18 @@ public class FxRepoMainApplication {
                 default -> log.info("Upload dir: No action taken");
             }
             typesenseService.init();
+            HashSet<Role> roles = new HashSet<>();
+            var modRole = new Role();
+            modRole.setName(Role.MOD);
+            roles.add(modRole);
+            var userRole = new Role();
+            userRole.setName(Role.USER);
+            roles.add(userRole);
+            var adminRole = new Role();
+            adminRole.setName(Role.ADMIN);
+            roles.add(adminRole);
+
+            roleRepository.saveAll(roles);
         };
     }
 
