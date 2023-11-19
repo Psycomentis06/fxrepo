@@ -12,9 +12,10 @@ import {heroArrowLeft, heroArrowUpOnSquare, heroPhoto, heroXCircle, heroXMark} f
 import {heroEyeSolid, heroHandThumbUpSolid} from '@ng-icons/heroicons/solid'
 import {ReactiveFormsModule} from "@angular/forms";
 import {ImageCardComponent} from './components/image-card/image-card.component';
-import { ImageDetailsComponent } from './image-details/image-details.component';
-import { PaginationComponent } from './components/pagination/pagination.component';
+import {ImageDetailsComponent} from './image-details/image-details.component';
+import {PaginationComponent} from './components/pagination/pagination.component';
 import {CategoriesModule} from "../../components/categories/categories.module";
+import {MatAutocompleteModule} from '@angular/material/autocomplete'
 
 
 @NgModule({
@@ -42,7 +43,8 @@ import {CategoriesModule} from "../../components/categories/categories.module";
       heroHandThumbUpSolid,
       heroXMark
     }),
-    CategoriesModule
+    CategoriesModule,
+    MatAutocompleteModule
   ]
 })
 export class ImageModule {

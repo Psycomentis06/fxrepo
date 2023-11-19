@@ -19,7 +19,7 @@ export class CategoryService {
     const queryParams = {
       q: name,
       p: page,
-      s: size
+      l: size
     }
     return this.http.get<ResponseModel<Page<Category[]>>>(this.GET_CATEGORIES_ENDPOINT.replace('{postType}', postType), {
       params: queryParams
