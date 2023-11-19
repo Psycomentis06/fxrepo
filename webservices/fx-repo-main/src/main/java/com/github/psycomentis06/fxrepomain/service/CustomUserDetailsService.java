@@ -15,7 +15,7 @@ import java.util.Collection;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Autowired
     public CustomUserDetailsService(UserRepository userRepository) {
@@ -24,7 +24,8 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        var op = userRepository.findByEmail(username);
+//        var op = userRepository.findByEmail(username);
+        var op = userRepository.findByUsernameOrEmail(username, username);
         User u = op.orElseThrow(() -> new UsernameNotFoundException("No user found for " + username));
         Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
         u.getRoles().forEach(
@@ -41,4 +42,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         );
         return new org.springframework.security.core.userdetails.User(u.getEmail(), u.getPassword(),authorities);
     }
+
+
 }

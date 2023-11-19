@@ -14,6 +14,12 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class Permission {
+
+   public static final String READ = "r";
+   public static final String WRITE = "w";
+   public static final String UPDATE = "u";
+   public static final String DELETE = "d";
+
    @Id
    private String name;
 
