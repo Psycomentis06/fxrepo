@@ -2,6 +2,7 @@ package com.github.psycomentis06.fxrepomain.service;
 
 import com.github.psycomentis06.fxrepomain.entity.User;
 import com.github.psycomentis06.fxrepomain.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //        var op = userRepository.findByEmail(username);
         var op = userRepository.findByUsernameOrEmail(username, username);

@@ -9,7 +9,6 @@ import com.github.psycomentis06.fxrepomain.repository.RoleRepository;
 import com.github.psycomentis06.fxrepomain.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
-import org.hibernate.type.descriptor.java.ObjectJavaType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -71,18 +71,18 @@ public class SecurityController {
             return new ResponseEntity<>(res, res.getStatus());
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername(login.getUsername());
-        var date = Instant.now();
+        var date = new Date(System.currentTimeMillis());
         var token = JWT.create()
                 .withSubject(userDetails.getUsername())
                 .withIssuedAt(date)
-                .withExpiresAt(date.plusSeconds(60))
+                .withExpiresAt(new Date(System.currentTimeMillis() + (5 * 60 * 1000)))
                 .withIssuer("fx-repo@" + request.getRemoteHost())
                 .withClaim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                 .sign(Algorithm.HMAC256(tokenKey));
         var refreshToken = JWT.create()
                 .withSubject(userDetails.getUsername())
                 .withIssuedAt(date)
-                .withExpiresAt(date.plusSeconds(86400))
+                .withExpiresAt(new Date(System.currentTimeMillis() + (24 * 60 * 60 * 1000)))
                 .withIssuer("fx-repo@" + request.getRemoteHost())
                 .withClaim("roles", userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
                 .withClaim("address", request.getRemoteUser())
