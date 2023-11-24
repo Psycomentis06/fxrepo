@@ -7,6 +7,7 @@ import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -57,11 +58,14 @@ public class Post {
     private void onCreate() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = this.createdAt;
-        var uuid = UUID.randomUUID().toString().substring(0, 6);
+        var uuid = UUID.randomUUID().toString().substring(0, 10);
         this.slug = this.title
                 .strip()
                 .toLowerCase()
-                .replace(' ', '-') + '-' + uuid;
+                .substring(0, Math.min(this.title.length(), 30)) + '-' + uuid
+                .strip()
+                .replace(' ', '-');
+
     }
 
     @PreUpdate
