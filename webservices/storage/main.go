@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"log"
 	"storage/src/config"
@@ -16,6 +17,7 @@ func main() {
 	mc := services.NewS3Client(&cnf)
 	ctx := context.Background()
 	r.Use(gin.Logger(), gin.Recovery(), middlewares.InjectionMiddleware(&ctx, &cnf, mc))
+	r.Use(cors.Default())
 
 	_, cbErr := services.CreateBucket(ctx, mc, config.Configuration.ImageBucketName)
 	if cbErr != nil {
