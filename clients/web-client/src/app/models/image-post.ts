@@ -1,3 +1,5 @@
+import {FileVariantModel} from "./file-variant";
+
 export interface ImagePostModel {
   title: string,
   content: string,
@@ -19,3 +21,33 @@ export interface ImagePostListModel {
   category: string,
   nsfw: boolean
 }
+
+export interface ImagePostDetailsModel {
+  title: string;
+  updatedAt: string;
+  thumbnail: string;
+  category: {
+    name: string;
+    id: number;
+  };
+  nsfw: boolean;
+  slug: string;
+  createdAt: string;
+  userId: string;
+  id: string;
+  content: string;
+  image: {
+    accentColor: string;
+    averageHash: string;
+    colorHash: string;
+    perceptualHash: string;
+    differenceHash: string;
+    id: string;
+    variants: FileVariantModel[];
+  };
+  tags: {
+    name: string;
+  }[];
+}
+
+

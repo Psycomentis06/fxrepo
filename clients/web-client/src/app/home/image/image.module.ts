@@ -8,7 +8,7 @@ import {HeaderComponent} from './components/header/header.component';
 import {UploadImageFileComponent} from './post/components/upload-image-file/upload-image-file.component';
 import {CreateImageFormComponent} from './post/components/create-image-form/create-image-form.component';
 import {NgIconsModule} from '@ng-icons/core'
-import {heroArrowLeft, heroArrowUpOnSquare, heroPhoto, heroXCircle, heroXMark} from '@ng-icons/heroicons/outline'
+import {heroArrowLeft, heroArrowUpOnSquare, heroPhoto, heroXCircle, heroXMark, heroSparkles} from '@ng-icons/heroicons/outline'
 import {heroEyeSolid, heroHandThumbUpSolid} from '@ng-icons/heroicons/solid'
 import {ReactiveFormsModule} from "@angular/forms";
 import {ImageCardComponent} from './components/image-card/image-card.component';
@@ -41,7 +41,8 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete'
       heroXCircle,
       heroEyeSolid,
       heroHandThumbUpSolid,
-      heroXMark
+      heroXMark,
+      heroSparkles
     }),
     CategoriesModule,
     MatAutocompleteModule
