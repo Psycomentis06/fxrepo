@@ -34,4 +34,6 @@ public class User {
     private List<Role> roles;
     @ManyToOne
     private ImageFile picture;
+    @OneToMany
+    private List<FileDownloadEvent> downloadEvents;
 }
