@@ -96,12 +96,6 @@ public class StatsController {
         var post = postViewOp.orElseThrow(() -> new EntityNotFoundException("File not found"));
         var postViewEvent = new PostViewEvent();
         postViewEvent.setPost(post);
-        try {
-            var user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            var userOp = userRepository.findByUsernameOrEmail(user.getUsername(), user.getUsername());
-            userOp.ifPresent(postViewEvent::setUser);
-        } catch (ClassCastException ignored) {
-        }
         if (userAgent != null) postViewEvent.setUserAgent(userAgent);
         postViewEvent.setIpAddr(ipAddr);
         var savedObj = postViewEventRepository.save(postViewEvent);
