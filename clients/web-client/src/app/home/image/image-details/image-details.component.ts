@@ -12,6 +12,7 @@ import {HttpClient} from "@angular/common/http";
 })
 export class ImageDetailsComponent implements OnInit {
   @Input('slug') inputSlug?: string
+  @Input('flex-direction') flexDir: "flex-row" | "flex-col" = "flex-row"
 
   slug?: string
 

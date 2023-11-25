@@ -11,14 +11,14 @@
             </div>
             <app-pagination [page]="imagePostsPage" (pageChange)="getImagePostsPage()"/>
         </div>
-        <dialog #imageDetailsDialog class="modal">
-            <div class="modal-box w-2/3">
+        <dialog #imageDetailsDialog class="modal" style="background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px)">
+            <div class="modal-box w-11/12 max-w-5xl">
                 <button class="absolute top-0 right-0 btn btn-ghost btn-circle"
                         (click)="closeModal()">
                     <ng-icon name="heroXCircle" size="28px"/>
                 </button>
                 <!--ngIf so the component gets destroyed and renders after every closing of the dialog-->
-                <app-image-details *ngIf="imageDetailsDialog.open" [slug]="selectedImageSlug"/>
+                <app-image-details *ngIf="imageDetailsDialog.open" [slug]="selectedImageSlug" flex-direction="flex-col"/>
             </div>
         </dialog>
     </section>

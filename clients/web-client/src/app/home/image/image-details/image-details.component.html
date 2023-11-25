@@ -1,5 +1,5 @@
-<section class="image-post-details flex flex-col lg:flex-row">
-  <img class="w-[720px] h-[500px]" [src]="variant?.url" [alt]="imagePost?.content">
+<section class="image-post-details flex flex-col" [ngClass]="'lg:' + flexDir">
+  <img class="w-full h-[500px] object-cover" [src]="variant?.url" [alt]="imagePost?.content">
   <div class="p-4 flex flex-col" style="gap: 10px">
     <h1 class="text-2xl text-primary font-bold">{{imagePost?.title}}</h1>
     <p class="opacity-75 text-primary text-sm">{{imagePost?.content}}</p>
@@ -66,7 +66,8 @@
               {{v.sha256}}
             </li>
             <li>
-              <button (click)="downloadImage(v.url, imagePost?.title + '_' + v.title + '.png')" class="btn btn-primary btn-block capitalize">
+              <button (click)="downloadImage(v.url, imagePost?.title + '_' + v.title + '.png')"
+                      class="btn btn-primary btn-block capitalize">
                 Download
               </button>
             </li>
