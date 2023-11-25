@@ -1,9 +1,9 @@
 <div class="post-image-form relative">
-  <div *ngIf="!disabled"
+  <div *ngIf="disabled"
        class="absolute top-0 left-0 w-full h-full rounded-lg px-5 py-4 flex items-center justify-center">
     <h1 class="md:text-xl text-center">You need to upload the image before submitting the data</h1>
   </div>
-  <form [formGroup]="dataForm" (submit)="submit($event)" [ngClass]="!disabled ? 'invisible': ''">
+  <form [formGroup]="dataForm" (submit)="submit($event)" [ngClass]="disabled ? 'invisible': ''">
     <div class="form-control w-full">
       <label class="label">
         <span class="label-text">Title</span>
@@ -33,7 +33,7 @@
       <input class="select active:scale-95 hover:bg-base-300 transition duration-100" type="text"
              formControlName="category" placeholder="Category" [matAutocomplete]="auto">
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let c of categories | async" [value]="category">{{c}}</mat-option>
+        <mat-option *ngFor="let c of categories | async" [value]="c">{{c}}</mat-option>
       </mat-autocomplete>
     </div>
 
