@@ -17,15 +17,13 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/v1/post/image")
@@ -114,12 +112,14 @@ public class ImagePostController {
     public ResponseEntity<Object> getAll(
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "limit", defaultValue = "10") int limit,
+            @RequestParam(value = "sort_by", defaultValue = "createdAt") String sortField,
+            @RequestParam(value = "sort_dir", defaultValue = "asc") String sortDir,
             @RequestParam(value = "search", required = false, defaultValue = "") String search,
             @RequestParam(value = "tag", required = false) String tag,
             @RequestParam(value = "category", required = false) String category,
             @RequestParam(value = "nsfw", required = false, defaultValue = "false") boolean nsfw
     ) {
-        Pageable pageable = PageRequest.of(page, limit);
+        Pageable pageable = PageRequest.of(page, limit, Sort.by(Sort.Direction.DESC, "createdAt"));
 //        var posts = imagePostRepository.findAllByTitleContains(ImagePostListProjection.class, search, pageable);
         Specification<ImagePost> imagePostSpecification = ImagePostSpecification
                 .isPublic()
@@ -186,7 +186,7 @@ public class ImagePostController {
         return imagePosts;
     }
 
-   @GetMapping("/slug/{slug}")
+    @GetMapping("/slug/{slug}")
     public ResponseEntity<ResponseObjModel> getPostBySlug(
             @PathVariable String slug
     ) {
