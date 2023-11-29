@@ -11,18 +11,22 @@ import { ToastsComponent } from './components/toasts/toasts.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
   declarations: [LayoutComponent, HeaderComponent, FooterComponent, MobileComponent, DesktopComponent, NotificationsComponent, ToastsComponent, ModalComponent, LoginComponent, RegisterComponent],
-  imports: [
-    CommonModule,
-    RouterModule,
-    NgOptimizedImage
-  ],
-  exports: [
-    LayoutComponent
-  ]
+    imports: [
+        CommonModule,
+        RouterModule,
+        NgOptimizedImage,
+        ReactiveFormsModule
+    ],
+    exports: [
+        LayoutComponent,
+        LoginComponent,
+        RegisterComponent
+    ]
 })
 export class CoreModule {
 }
