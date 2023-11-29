@@ -2,6 +2,8 @@ import {NgModule} from "@angular/core";
 import {Route, RouterModule} from "@angular/router";
 import {HomeComponent} from "./home.component";
 import {HomePageComponent} from "./home-page/home-page.component";
+import {LoginComponent} from "../core/components/login/login.component";
+import {RegisterComponent} from "../core/components/register/register.component";
 
 const routes: Route[] = [
   {
@@ -20,7 +22,9 @@ const routes: Route[] = [
       {
         path: 'images',
         loadChildren: () => import('./image/image.module').then(m => m.ImageModule)
-      }
+      },
+      {path: 'login', component: LoginComponent},
+      {path: 'register', component: RegisterComponent}
     ]
   }
 ]
@@ -29,4 +33,5 @@ const routes: Route[] = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class HomeRoutingModule {}
+export class HomeRoutingModule {
+}
