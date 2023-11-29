@@ -47,7 +47,7 @@ export class ImagePostService {
   }
 
   createImagePost(d: ImagePostModel) {
-    return this.http.post<ImagePostModel>(this.CREATE_NEW_IMAGE_POST_ENDPOINT, d)
+    return this.http.post<ResponseModel<ImagePostDetailsModel>>(this.CREATE_NEW_IMAGE_POST_ENDPOINT, d)
   }
 
   getImagePostPage(page?: number, size?: number, search?: string, ts?: boolean, category?: number, tag?: string, nsfw?: boolean) {

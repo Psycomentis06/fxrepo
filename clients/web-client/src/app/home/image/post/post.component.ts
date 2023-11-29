@@ -1,8 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Location} from '@angular/common'
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormGroup} from "@angular/forms";
 import {ImagePostModel} from "../../../models/image-post";
 import {ImagePostService} from "../../../services/image-post.service";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-post',
@@ -12,7 +13,8 @@ import {ImagePostService} from "../../../services/image-post.service";
 export class PostComponent {
 
   imageId?: string
-  constructor(private location: Location, private imagePostService: ImagePostService) {
+
+  constructor(private location: Location, private imagePostService: ImagePostService, private router: Router) {
   }
 
   goBack() {
@@ -24,7 +26,11 @@ export class PostComponent {
   }
 
   createPostFormSubmitEvent(e: FormGroup) {
-    const { title, description, category, tags, nsfw } = e.value
+    if (!this.imageId) {
+      alert("Image Not Set, Upload image first");
+      return;
+    }
+    const {title, description, category, tags, nsfw} = e.value
     const data: ImagePostModel = {
       title,
       category,
@@ -35,8 +41,18 @@ export class PostComponent {
       image: this.imageId || ''
     }
     this.imagePostService.createImagePost(data)
-      .subscribe(r => {
-        console.log(r)
+      .subscribe({
+        next: r => {
+          if (r.code === 201) {
+            alert("Image Post Created Successfully")
+            this.router.navigate(['/images', r.data.slug])
+          } else {
+            alert('Image Post Not Created: ' + r.message)
+          }
+        },
+        error: err => {
+          alert("Failed To Create Image Post: " + err)
+        }
       })
   }
 }

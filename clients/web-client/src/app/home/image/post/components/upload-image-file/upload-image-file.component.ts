@@ -48,7 +48,9 @@ export class UploadImageFileComponent {
           if (res.type === HttpEventType.Response) {
             const d = res.body as ResponseModel<ImageFileModel>
             const imgUrl = d.data.variants.filter(v => v.original)[0].url
-            this.imageId.emit(imgUrl)
+            this.imageId.emit(d.data.id)
+            this.imageLocalUrl = imgUrl
+            this.progress = 0
           }
         },
         error: err => alert(err.message)
