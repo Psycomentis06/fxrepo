@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 public class ImagePostSpecification {
     public static Specification<ImagePost> getByTagName(String name) {
         return (root, query, criteriaBuilder) -> {
-            if (name == null) return null;
+            if (name == null) return criteriaBuilder.conjunction();
             Join<Tag, ImagePost> imagePostTags = root.join("tags");
             return criteriaBuilder.equal(imagePostTags.get("name"), name);
         };
@@ -17,7 +17,7 @@ public class ImagePostSpecification {
 
     public static Specification<ImagePost> getByCategoryId(String categoryId) {
         return (root, query, criteriaBuilder) -> {
-            if (categoryId == null) return null;
+            if (categoryId == null) return criteriaBuilder.conjunction();
             Join<Category, ImagePost> imagePostCategory = root.join("category");
             return criteriaBuilder.equal(imagePostCategory.get("id"), categoryId);
         };
@@ -25,22 +25,20 @@ public class ImagePostSpecification {
 
     public static Specification<ImagePost> getByImageTitleContains(String title) {
         return (root, query, criteriaBuilder) -> {
-            if (title == null) return null;
-            return criteriaBuilder.like(criteriaBuilder.upper(root.get("title")), "%" + title + "%");
+            if (title == null) return criteriaBuilder.conjunction();
+            return criteriaBuilder.like(criteriaBuilder.lower(root.get("title")), "%" + title.toLowerCase() + "%");
         };
     }
 
     public static Specification<ImagePost> getByImageDescriptionContains(String description) {
         return (root, query, criteriaBuilder) -> {
             if (description == null) return null;
-            return criteriaBuilder.like(criteriaBuilder.upper(root.get("content")), "%" + description + "%");
+            return criteriaBuilder.like(criteriaBuilder.lower(root.get("content")), "%" + description.toLowerCase() + "%");
         };
     }
 
     public static Specification<ImagePost> isPublic() {
-        return (root, query, criteriaBuilder) -> {
-            return criteriaBuilder.equal(root.<Boolean>get("publik"), true);
-        };
+        return (root, query, criteriaBuilder) -> criteriaBuilder.equal(root.<Boolean>get("publik"), true);
     }
 
     public static Specification<ImagePost> isNsfw(boolean nsfw) {
